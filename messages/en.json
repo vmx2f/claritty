@@ -1,0 +1,49 @@
+{
+  "auth": {
+    "deEeEI": "Register",
+    "odXlk8": "Log in",
+    "25WwxF": "Don't have an account?",
+    "3t2ZWR": "Login to your account",
+    "5sg7KC": "Password",
+    "8HJxXG": "Sign up",
+    "AWVk03": "Logging in...",
+    "AyGauy": "Login",
+    "bbL6co": "Login with Facebook",
+    "cyRU1N": "Forgot your password?",
+    "hfuuOe": "Login with Google",
+    "HJo9Ji": "Enter your information below to access your account",
+    "MZCt8F": "Login with Apple",
+    "sy+pv5": "Email",
+    "GgThsK": "Sign up with Apple",
+    "HAlOn1": "Name",
+    "hC5cn7": "Enter your information below to create your account",
+    "huqKGl": "Create account",
+    "QJob30": "Sign up with Facebook",
+    "SeO7GZ": "Create your account",
+    "SQJto2": "Sign in",
+    "uCk8r+": "Already have an account?",
+    "v7Bl2J": "Creating account...",
+    "wUCGLt": "Sign up with Google"
+  },
+  "navbar": {
+    "HCnHb1": "./Link3",
+    "kLJz3l": "./Link2",
+    "tSZp9o": "./Home",
+    "UnHpzG": "./Link1"
+  },
+  "metadata": {
+    "ejEGdx": "Home",
+    "keywords": {
+      "+gQvgd": "keyword-1",
+      "+PoYfH": "keyword-2"
+    },
+    "OE94n1": "description",
+    "xl217p": "title",
+    "Xstf7k": "alt text"
+  },
+  "Home": {
+    "fLO+Ay": "Templates ",
+    "GNiJM8": "Looking for a starting point or more instructions? Head over to ",
+    "Ttqbab": "To get started, edit the page.tsx file."
+  }
+}

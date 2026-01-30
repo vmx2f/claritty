@@ -1,0 +1,49 @@
+{
+  "auth": {
+    "deEeEI": "Registrarse",
+    "odXlk8": "Iniciar sesión",
+    "25WwxF": "¿No tienes una cuenta?",
+    "3t2ZWR": "Inicia sesión en tu cuenta",
+    "5sg7KC": "Contraseña",
+    "8HJxXG": "Registrarse",
+    "AWVk03": "Iniciando sesión...",
+    "AyGauy": "Iniciar sesión",
+    "bbL6co": "Iniciar sesión con Facebook",
+    "cyRU1N": "¿Olvidaste tu contraseña?",
+    "hfuuOe": "Iniciar sesión con Google",
+    "HJo9Ji": "Ingresa tu información abajo para acceder a tu cuenta",
+    "MZCt8F": "Iniciar sesión con Apple",
+    "sy+pv5": "Correo electrónico",
+    "GgThsK": "Registrarse con Apple",
+    "HAlOn1": "Nombre",
+    "hC5cn7": "Ingresa tu información abajo para crear tu cuenta",
+    "huqKGl": "Crear cuenta",
+    "QJob30": "Registrarse con Facebook",
+    "SeO7GZ": "Crea tu cuenta",
+    "SQJto2": "Iniciar sesión",
+    "uCk8r+": "¿Ya tienes una cuenta?",
+    "v7Bl2J": "Creando cuenta...",
+    "wUCGLt": "Registrarse con Google"
+  },
+  "navbar": {
+    "HCnHb1": "Enlace3",
+    "kLJz3l": "Enlace2",
+    "tSZp9o": "Inicio",
+    "UnHpzG": "Enlace1"
+  },
+  "metadata": {
+    "ejEGdx": "Inicio",
+    "keywords": {
+      "+gQvgd": "palabra-clave-1",
+      "+PoYfH": "palabra-clave-2"
+    },
+    "OE94n1": "descripción",
+    "xl217p": "título",
+    "Xstf7k": "texto alternativo"
+  },
+  "Home": {
+    "fLO+Ay": "Plantillas",
+    "GNiJM8": "¿Buscas un punto de partida o más instrucciones? Dirígete a ",
+    "Ttqbab": "Para comenzar, edita el archivo page.tsx."
+  }
+}
