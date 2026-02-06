@@ -10,9 +10,15 @@ import {
   Cog6ToothIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  UserCircleIcon
+  UserCircleIcon,
+  PlusIcon,
+  CheckIcon
 } from "@heroicons/react/24/outline";
 import { authClient } from "@/lib/auth-client";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
+import { Id } from "../../../../convex/_generated/dataModel";
+import { useOrganization } from "../../../contexts/OrganizationContext";
 import ThemeSwitch from "../layout/theme-switch";
 import LanguageToggle from "../providers/language-toggle";
 
@@ -24,7 +30,8 @@ interface SidebarProps {
 export const navigation = [
   { name: "Flow Chart", href: "/dashboard/flowchart", icon: HomeIcon },
   { name: "Dashboard", href: "/dashboard", icon: HomeIcon },
-  { name: "Organizations", href: "/dashboard/organizations", icon: BuildingOfficeIcon },
+  { name: "Orders", href: "/dashboard/orders", icon: BuildingOfficeIcon },
+  { name: "Clients", href: "/dashboard/clients", icon: BuildingOfficeIcon },
   { name: "Team Members", href: "/dashboard/members", icon: UsersIcon },
   { name: "Notifications", href: "/dashboard/notifications", icon: BellIcon },
   { name: "Settings", href: "/dashboard/settings", icon: Cog6ToothIcon },
@@ -35,6 +42,15 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isOrgDropdownOpen, setIsOrgDropdownOpen] = useState(false);
+  const [showCreateOrgModal, setShowCreateOrgModal] = useState(false);
+  const [newOrgName, setNewOrgName] = useState("");
+  const [newOrgDescription, setNewOrgDescription] = useState("");
+
+  // Organization management
+  const organizations = useQuery(api.organizations.getUserOrganizations);
+  const createOrgMutation = useMutation(api.organizations.createOrganization);
+  const { selectedOrgId, setSelectedOrgId } = useOrganization();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -51,6 +67,13 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
     checkAuth();
   }, []);
 
+  useEffect(() => {
+    // Auto-select first organization if available and none selected
+    if (organizations && organizations.length > 0 && !selectedOrgId) {
+      setSelectedOrgId(organizations[0]._id);
+    }
+  }, [organizations, selectedOrgId]);
+
   const handleSignOut = async () => {
     try {
       await authClient.signOut();
@@ -58,6 +81,22 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
       window.location.href = "/";
     } catch (error) {
       console.error("Sign out error:", error);
+    }
+  };
+
+  const createOrganization = async () => {
+    if (!newOrgName.trim()) return;
+    
+    try {
+      await createOrgMutation({
+        name: newOrgName.trim(),
+        description: newOrgDescription.trim() || undefined
+      });
+      setNewOrgName("");
+      setNewOrgDescription("");
+      setShowCreateOrgModal(false);
+    } catch (error) {
+      console.error("Failed to create organization:", error);
     }
   };
 
@@ -76,7 +115,7 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
         )}
       </button>
 
-      {/* Logo/Header */}
+      {/* Logo/Header with Organization Selector */}
       <div className="p-6 border-b border-border flex-shrink-0">
         <div className={`flex items-center ${isCollapsed ? "justify-center" : "space-x-3"}`}>
           <div className="w-10 h-10 bg-accent-color rounded-lg flex items-center justify-center flex-shrink-0">
@@ -85,7 +124,60 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
           <div className={`flex flex-col overflow-hidden transition-all duration-300 ease-in-out whitespace-nowrap ${isCollapsed ? "max-w-0 opacity-0" : "max-w-[150px] opacity-100 ml-3"
             }`}>
             <h1 className="text-lg font-semibold text-primary-text">Claritty</h1>
-            <p className="text-xs text-secondary-text">Organization Hub</p>
+            {!isCollapsed && (
+              <div className="relative">
+                <button
+                  onClick={() => setIsOrgDropdownOpen(!isOrgDropdownOpen)}
+                  className="flex items-center justify-between w-full text-xs text-secondary-text hover:text-primary-text transition-colors"
+                >
+                  <span className="truncate">
+                    {selectedOrgId && organizations 
+                      ? organizations.find(org => org._id === selectedOrgId)?.name || "Select Organization"
+                      : "No Organization"
+                    }
+                  </span>
+                  <ChevronLeftIcon className={`w-3 h-3 transition-transform ${isOrgDropdownOpen ? 'rotate-90' : ''}`} />
+                </button>
+                
+                {isOrgDropdownOpen && (
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-card rounded-lg shadow-lg border border-border z-50 overflow-hidden">
+                    <div className="max-h-48 overflow-y-auto">
+                      {organizations && organizations.length > 0 ? (
+                        organizations.map((org) => (
+                          <button
+                            key={org._id}
+                            onClick={() => {
+                              setSelectedOrgId(org._id);
+                              setIsOrgDropdownOpen(false);
+                            }}
+                            className={`w-full text-left px-3 py-2 text-sm hover:bg-hover transition-colors flex items-center justify-between ${
+                              selectedOrgId === org._id ? "bg-accent-color/10 text-accent-color" : "text-primary-text"
+                            }`}
+                          >
+                            <span className="truncate">{org.name}</span>
+                            {selectedOrgId === org._id && <CheckIcon className="w-4 h-4 flex-shrink-0" />}
+                          </button>
+                        ))
+                      ) : (
+                        <div className="p-3 text-sm text-secondary-text">No organizations found</div>
+                      )}
+                    </div>
+                    <div className="border-t border-border p-2">
+                      <button
+                        onClick={() => {
+                          setShowCreateOrgModal(true);
+                          setIsOrgDropdownOpen(false);
+                        }}
+                        className="w-full text-left px-3 py-2 text-sm text-accent-color hover:bg-accent-color/10 rounded transition-colors flex items-center"
+                      >
+                        <PlusIcon className="w-4 h-4 mr-2" />
+                        Create Organization
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -191,6 +283,67 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
           </div>
         )}
       </div>
+
+      {/* Create Organization Modal */}
+      {showCreateOrgModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-card rounded-xl p-6 max-w-md w-full">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold text-primary-text">Create Organization</h2>
+              <button
+                onClick={() => setShowCreateOrgModal(false)}
+                className="p-2 hover:bg-hover rounded-lg transition-colors"
+              >
+                <ChevronLeftIcon className="w-5 h-5 text-secondary-text" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-primary-text mb-2">
+                  Organization Name
+                </label>
+                <input
+                  type="text"
+                  value={newOrgName}
+                  onChange={(e) => setNewOrgName(e.target.value)}
+                  className="w-full bg-main border border-border rounded-lg px-4 py-2 text-primary-text placeholder:text-secondary-text focus:outline-none focus:ring-2 focus:ring-accent-color/50"
+                  placeholder="Enter organization name"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-primary-text mb-2">
+                  Description (optional)
+                </label>
+                <textarea
+                  value={newOrgDescription}
+                  onChange={(e) => setNewOrgDescription(e.target.value)}
+                  className="w-full bg-main border border-border rounded-lg px-4 py-2 text-primary-text placeholder:text-secondary-text focus:outline-none focus:ring-2 focus:ring-accent-color/50 resize-none"
+                  placeholder="Enter organization description"
+                  rows={3}
+                />
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button
+                  onClick={() => setShowCreateOrgModal(false)}
+                  className="flex-1 px-6 py-2.5 border border-border rounded-lg hover:bg-hover transition-colors text-primary-text font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={createOrganization}
+                  disabled={!newOrgName.trim()}
+                  className="flex-1 px-6 py-2.5 bg-primary-text text-main rounded-lg hover:bg-text-hover transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Create
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

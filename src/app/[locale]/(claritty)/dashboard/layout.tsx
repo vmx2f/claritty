@@ -5,6 +5,7 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/app/_components/dashboard/sidebar";
 import TopBar from "@/app/_components/dashboard/top-bar";
+import { OrganizationProvider } from "@/contexts/OrganizationContext";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
@@ -44,18 +45,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <section className="w-full h-screen">
-      <div className={`flex transition-all duration-300 ${isSidebarCollapsed ? "ml-0" : "ml-0"
-        }`}>
-        <Sidebar
-          isCollapsed={isSidebarCollapsed}
-          onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-        />
-        <div className="flex-1">
-          <TopBar/>
-          {children}
+    <OrganizationProvider>
+      <section className="w-full h-screen">
+        <div className={`flex transition-all duration-300 ${isSidebarCollapsed ? "ml-0" : "ml-0"
+          }`}>
+          <Sidebar
+            isCollapsed={isSidebarCollapsed}
+            onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+          />
+          <div className="flex-1">
+            <TopBar/>
+            {children}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </OrganizationProvider>
   );
 }

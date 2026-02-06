@@ -67,4 +67,61 @@ export default defineSchema({
     timestamp: v.number(),
     metadata: v.optional(v.any()),
   }).index("organizationId", ["organizationId"]),
+  
+  // Orders table
+  orders: defineTable({
+    orgId: v.id("organizations"),
+    clientId: v.id("clients"),
+    customerName: v.string(),
+    items: v.array(
+      v.object({
+        product: v.string(),
+        quantity: v.number(),
+        price: v.number()
+      })
+    ),
+    total: v.number(),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("paid"),
+      v.literal("shipped"),
+      v.literal("cancelled")
+    ),
+    createdAt: v.number(),
+    paidAt: v.optional(v.number()),
+    shippedAt: v.optional(v.number())
+  }).index("by_orgId", ["orgId"]),
+  
+  // Clients table
+  clients: defineTable({
+    orgId: v.id("organizations"),
+    name: v.string(),
+    email: v.string(),
+    phone: v.optional(v.string()),
+    company: v.optional(v.string()),
+    address: v.optional(v.string()),
+    city: v.optional(v.string()),
+    country: v.optional(v.string()),
+    notes: v.optional(v.string()),
+    status: v.union(v.literal("active"), v.literal("inactive"), v.literal("prospect")),
+    totalOrders: v.number(),
+    totalSpent: v.number(),
+    lastOrderDate: v.optional(v.number()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_orgId", ["orgId"]),
+  
+  // Capital transactions table
+  capitalTransactions: defineTable({
+    orgId: v.id("organizations"),
+    type: v.union(
+      v.literal("order_payment"),
+      v.literal("inventory_purchase"),
+      v.literal("expense")
+    ),
+    amount: v.number(),
+    description: v.string(),
+    date: v.number(),
+    orderId: v.optional(v.id("orders")) // Link to order if applicable
+  }).index("by_orgId", ["orgId"]),
 });
