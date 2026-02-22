@@ -1,15 +1,15 @@
-import { query, mutation, internalMutation } from "./_generated/server";
+import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 
-// Invite a user to an organization
-export const inviteMember = mutation({
+// Create an invitation for a member
+export const createInvitation = mutation({
   args: {
     organizationId: v.id("organizations"),
     email: v.string(),
     role: v.union(v.literal("admin"), v.literal("member"), v.literal("viewer")),
-    permissions: v.array(v.string()),
+    permissions: v.array(v.string()), // e.g. ["dashboard", "orders"]
   },
-  returns: v.null(),
+  returns: v.id("invitations"),
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
@@ -17,86 +17,218 @@ export const inviteMember = mutation({
     }
 
     // Check if user has invite permissions
-    const memberships = await ctx.db
+    const membership = await ctx.db
       .query("organizationMembers")
       .withIndex("by_organization", (q) => q.eq("organizationId", args.organizationId))
-      .collect();
+      .filter((q) => q.eq(q.field("userId"), identity.subject))
+      .unique();
 
-    const membership = memberships.find(m => m.userId === identity.subject && m.isActive);
-
-    if (!membership || (!membership.permissions.includes("invite") && membership.role !== "owner")) {
+    if (!membership || (membership.role !== "owner" && !membership.permissions.includes("members") && !membership.permissions.includes("settings"))) {
       throw new Error("Insufficient permissions to invite members");
     }
 
-    // For now, we'll assume the email corresponds to a user ID
-    // In a real implementation, you'd want to look up the user by email
-    const invitedUserId = args.email; // This is a simplification
+    // Check for existing pending invitation
+    const existingInvitation = await ctx.db
+      .query("invitations")
+      .withIndex("by_organization", (q) => q.eq("organizationId", args.organizationId))
+      .filter((q) => q.and(q.eq(q.field("email"), args.email), q.eq(q.field("status"), "pending")))
+      .unique();
 
-    // Check if user is already a member
-    const existingMember = memberships.find(m => m.userId === invitedUserId);
-
-    if (existingMember) {
-      throw new Error("User is already a member of this organization");
+    if (existingInvitation) {
+      throw new Error("An invitation is already pending for this email");
     }
 
-    // Add the new member
-    await ctx.db.insert("organizationMembers", {
+    // Create the invitation
+    const invitationId = await ctx.db.insert("invitations", {
       organizationId: args.organizationId,
-      userId: invitedUserId,
+      email: args.email,
       role: args.role,
       permissions: args.permissions,
       invitedBy: identity.subject,
-      joinedAt: Date.now(),
-      isActive: true,
-    });
-
-    // Create notification for the invited user
-    await ctx.db.insert("notifications", {
-      userId: invitedUserId,
-      organizationId: args.organizationId,
-      type: "member_added",
-      title: "You've been added to an organization",
-      message: `You've been added as a ${args.role} to the organization`,
-      isRead: false,
+      status: "pending",
       createdAt: Date.now(),
+      expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
     // Log the activity
     await ctx.db.insert("organizationActivity", {
       organizationId: args.organizationId,
       userId: identity.subject,
-      action: "member_added",
-      details: `New member ${args.email} was added as ${args.role}`,
+      action: "member_added", // Using member_added for simplicity in activities
+      details: `Invited ${args.email} as ${args.role}`,
       timestamp: Date.now(),
     });
+
+    return invitationId;
   },
 });
 
-// Update member role and permissions
-export const updateMemberRole = mutation({
+// Revoke an invitation
+export const revokeInvitation = mutation({
   args: {
-    organizationId: v.id("organizations"),
-    memberId: v.id("organizationMembers"),
-    role: v.union(v.literal("admin"), v.literal("member"), v.literal("viewer")),
-    permissions: v.array(v.string()),
+    invitationId: v.id("invitations"),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Unauthorized");
+    if (!identity) throw new Error("Unauthorized");
+
+    const invitation = await ctx.db.get(args.invitationId);
+    if (!invitation) throw new Error("Invitation not found");
+
+    // Check permissions
+    const membership = await ctx.db
+      .query("organizationMembers")
+      .withIndex("by_organization", (q) => q.eq("organizationId", invitation.organizationId))
+      .filter((q) => q.eq(q.field("userId"), identity.subject))
+      .unique();
+
+    if (!membership || (membership.role !== "owner" && !membership.permissions.includes("members"))) {
+      throw new Error("Insufficient permissions");
     }
 
-    // Check if user has manage permissions permissions
-    const memberships = await ctx.db
+    await ctx.db.patch(args.invitationId, {
+      status: "revoked",
+    });
+  },
+});
+
+// Get pending invitations for an organization
+export const getOrganizationInvitations = query({
+  args: {
+    organizationId: v.id("organizations"),
+  },
+  returns: v.array(v.any()),
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
+    // Check if user is member
+    const membership = await ctx.db
       .query("organizationMembers")
       .withIndex("by_organization", (q) => q.eq("organizationId", args.organizationId))
+      .filter((q) => q.eq(q.field("userId"), identity.subject))
+      .unique();
+
+    if (!membership) return [];
+
+    return await ctx.db
+      .query("invitations")
+      .withIndex("by_organization", (q) => q.eq("organizationId", args.organizationId))
+      .filter((q) => q.eq(q.field("status"), "pending"))
+      .collect();
+  },
+});
+
+// Get invitations for the current user (by email)
+export const getMyInvitations = query({
+  args: {
+    email: v.string(),
+  },
+  returns: v.array(v.any()),
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
+    // We fetch invitations for this email that are still pending
+    const invitations = await ctx.db
+      .query("invitations")
+      .withIndex("by_email", (q) => q.eq("email", args.email))
+      .filter((q) => q.eq(q.field("status"), "pending"))
       .collect();
 
-    const membership = memberships.find(m => m.userId === identity.subject && m.isActive);
+    // Enrich with organization info
+    return await Promise.all(
+      invitations.map(async (invite) => {
+        const org = await ctx.db.get(invite.organizationId);
+        return {
+          ...invite,
+          organizationName: org?.name || "Unknown Organization",
+        };
+      })
+    );
+  },
+});
 
-    if (!membership || (!membership.permissions.includes("manage_permissions") && membership.role !== "owner")) {
-      throw new Error("Insufficient permissions to manage member roles");
+// Accept an invitation
+export const acceptInvitation = mutation({
+  args: {
+    invitationId: v.id("invitations"),
+  },
+  returns: v.id("organizationMembers"),
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthorized");
+
+    const invitation = await ctx.db.get(args.invitationId);
+    if (!invitation || invitation.status !== "pending") {
+      throw new Error("Invitation not found or no longer active");
+    }
+
+    if (invitation.expiresAt < Date.now()) {
+      await ctx.db.patch(args.invitationId, { status: "revoked" });
+      throw new Error("Invitation expired");
+    }
+
+    // In a real app, we'd check if identity.email matches invitation.email
+    // But identity might not have email depending on provider/config
+    // For now we trust the user calling acceptInvitation is the right one if they have the link/ID
+
+    // Add member
+    const memberId = await ctx.db.insert("organizationMembers", {
+      organizationId: invitation.organizationId,
+      userId: identity.subject,
+      role: invitation.role,
+      permissions: invitation.permissions,
+      invitedBy: invitation.invitedBy,
+      joinedAt: Date.now(),
+      isActive: true,
+    });
+
+    // Mark invitation as accepted
+    await ctx.db.patch(args.invitationId, {
+      status: "accepted",
+    });
+
+    // Create notification for the organization owner/inviter
+    await ctx.db.insert("notifications", {
+      userId: invitation.invitedBy,
+      organizationId: invitation.organizationId,
+      type: "invitation_accepted",
+      title: "Invitation Accepted",
+      message: `Someone accepted your invitation to join the organization`,
+      isRead: false,
+      createdAt: Date.now(),
+    });
+
+    return memberId;
+  },
+});
+
+// Update member role and permissions
+export const updateMemberPermissions = mutation({
+  args: {
+    organizationId: v.id("organizations"),
+    memberId: v.id("organizationMembers"),
+    role: v.optional(v.union(v.literal("admin"), v.literal("member"), v.literal("viewer"))),
+    roleName: v.optional(v.string()),
+    roleGroupId: v.optional(v.id("roleGroups")),
+    permissions: v.optional(v.array(v.string())),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthorized");
+
+    // Check if user has manage permissions
+    const membership = await ctx.db
+      .query("organizationMembers")
+      .withIndex("by_organization", (q) => q.eq("organizationId", args.organizationId))
+      .filter((q) => q.eq(q.field("userId"), identity.subject))
+      .unique();
+
+    if (!membership || (membership.role !== "owner" && !membership.permissions.includes("members"))) {
+      throw new Error("Insufficient permissions");
     }
 
     const memberToUpdate = await ctx.db.get(args.memberId);
@@ -104,41 +236,41 @@ export const updateMemberRole = mutation({
       throw new Error("Member not found");
     }
 
-    // Don't allow changing the owner's role
     if (memberToUpdate.role === "owner") {
-      throw new Error("Cannot change the owner's role");
+      throw new Error("Cannot change owner permissions");
     }
 
-    const oldRole = memberToUpdate.role;
+    const updates: any = {};
+    if (args.role !== undefined) updates.role = args.role;
+    if (args.roleName !== undefined) updates.roleName = args.roleName;
+    if (args.roleGroupId !== undefined) {
+      updates.roleGroupId = args.roleGroupId;
+      // If assigning to a group, inherit group permissions
+      if (args.roleGroupId) {
+        const group = await ctx.db.get(args.roleGroupId);
+        if (group) {
+          updates.permissions = group.permissions;
+        }
+      }
+    }
+    if (args.permissions !== undefined) updates.permissions = args.permissions;
 
-    await ctx.db.patch(args.memberId, {
-      role: args.role,
-      permissions: args.permissions,
-    });
+    await ctx.db.patch(args.memberId, updates);
 
-    // Create notification for the member whose role was changed
+    // Notification
     await ctx.db.insert("notifications", {
       userId: memberToUpdate.userId,
       organizationId: args.organizationId,
       type: "role_changed",
-      title: "Your role has been updated",
-      message: `Your role was changed from ${oldRole} to ${args.role}`,
+      title: "Permissions Updated",
+      message: `Your permissions in the organization have been updated`,
       isRead: false,
       createdAt: Date.now(),
-    });
-
-    // Log the activity
-    await ctx.db.insert("organizationActivity", {
-      organizationId: args.organizationId,
-      userId: identity.subject,
-      action: "role_changed",
-      details: `Member role was updated from ${oldRole} to ${args.role}`,
-      timestamp: Date.now(),
     });
   },
 });
 
-// Remove a member from an organization
+// Remove a member
 export const removeMember = mutation({
   args: {
     organizationId: v.id("organizations"),
@@ -147,20 +279,16 @@ export const removeMember = mutation({
   returns: v.null(),
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Unauthorized");
-    }
+    if (!identity) throw new Error("Unauthorized");
 
-    // Check if user has remove permissions
-    const memberships = await ctx.db
+    const membership = await ctx.db
       .query("organizationMembers")
       .withIndex("by_organization", (q) => q.eq("organizationId", args.organizationId))
-      .collect();
+      .filter((q) => q.eq(q.field("userId"), identity.subject))
+      .unique();
 
-    const membership = memberships.find(m => m.userId === identity.subject && m.isActive);
-
-    if (!membership || (!membership.permissions.includes("delete") && membership.role !== "owner")) {
-      throw new Error("Insufficient permissions to remove members");
+    if (!membership || (membership.role !== "owner" && !membership.permissions.includes("members"))) {
+      throw new Error("Insufficient permissions");
     }
 
     const memberToRemove = await ctx.db.get(args.memberId);
@@ -168,38 +296,15 @@ export const removeMember = mutation({
       throw new Error("Member not found");
     }
 
-    // Don't allow removing the owner
-    if (memberToRemove.role === "owner") {
-      throw new Error("Cannot remove the organization owner");
-    }
+    if (memberToRemove.role === "owner") throw new Error("Cannot remove owner");
 
     await ctx.db.patch(args.memberId, {
       isActive: false,
     });
-
-    // Create notification for the removed member
-    await ctx.db.insert("notifications", {
-      userId: memberToRemove.userId,
-      organizationId: args.organizationId,
-      type: "member_removed",
-      title: "Removed from organization",
-      message: "You have been removed from the organization",
-      isRead: false,
-      createdAt: Date.now(),
-    });
-
-    // Log the activity
-    await ctx.db.insert("organizationActivity", {
-      organizationId: args.organizationId,
-      userId: identity.subject,
-      action: "member_removed",
-      details: `Member ${memberToRemove.userId} was removed from the organization`,
-      timestamp: Date.now(),
-    });
   },
 });
 
-// Get all members of an organization
+// Get members
 export const getOrganizationMembers = query({
   args: {
     organizationId: v.id("organizations"),
@@ -207,24 +312,20 @@ export const getOrganizationMembers = query({
   returns: v.array(v.any()),
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return [];
-    }
+    if (!identity) return [];
 
-    // Check if user is a member
-    const memberships = await ctx.db
+    const membership = await ctx.db
       .query("organizationMembers")
       .withIndex("by_organization", (q) => q.eq("organizationId", args.organizationId))
+      .filter((q) => q.eq(q.field("userId"), identity.subject))
+      .unique();
+
+    if (!membership) return [];
+
+    return await ctx.db
+      .query("organizationMembers")
+      .withIndex("by_organization", (q) => q.eq("organizationId", args.organizationId))
+      .filter((q) => q.eq(q.field("isActive"), true))
       .collect();
-
-    const membership = memberships.find(m => m.userId === identity.subject && m.isActive);
-
-    if (!membership) {
-      return [];
-    }
-
-    const activeMembers = memberships.filter(m => m.isActive);
-
-    return activeMembers;
   },
 });

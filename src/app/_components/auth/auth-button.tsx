@@ -27,16 +27,16 @@ export function AuthButton() {
   }
 
   return (
-    <div className="flex text-sm items-center gap-4">
+    <div className="text-sm font-medium">
       <Link
         href="/login"
-        className="border rounded-full p-1 px-3"
+        className="border rounded-full p-1 px-3 mr-2"
       >
         {t('Log in')}
       </Link>
       <Link
         href="/register"
-        className="border bg-primary-text text-main rounded-full p-1 px-3"
+        className="text-sm font-medium px-4 py-2 rounded-md hover:bg-primary-text/10 transition-colors"
       >
         {t('Register')}
       </Link>

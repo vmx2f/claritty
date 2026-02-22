@@ -29,7 +29,7 @@ export const getUserNotifications = query({
 });
 
 // Mark notification as read
-export const markNotificationAsRead = mutation({
+export const markAsRead = mutation({
   args: {
     notificationId: v.id("notifications"),
   },
@@ -48,6 +48,25 @@ export const markNotificationAsRead = mutation({
     await ctx.db.patch(args.notificationId, {
       isRead: true,
     });
+  },
+});
+
+// Delete a notification
+export const deleteNotification = mutation({
+  args: {
+    notificationId: v.id("notifications"),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthorized");
+
+    const notification = await ctx.db.get(args.notificationId);
+    if (!notification || notification.userId !== identity.subject) {
+      throw new Error("Notification not found");
+    }
+
+    await ctx.db.delete(args.notificationId);
   },
 });
 

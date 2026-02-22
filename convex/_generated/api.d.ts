@@ -16,6 +16,10 @@ import type * as members from "../members.js";
 import type * as notifications from "../notifications.js";
 import type * as orders from "../orders.js";
 import type * as organizations from "../organizations.js";
+import type * as products from "../products.js";
+import type * as reports from "../reports.js";
+import type * as roleGroups from "../roleGroups.js";
+import type * as transactions from "../transactions.js";
 import type * as users from "../users.js";
 
 import type {
@@ -33,6 +37,10 @@ declare const fullApi: ApiFromModules<{
   notifications: typeof notifications;
   orders: typeof orders;
   organizations: typeof organizations;
+  products: typeof products;
+  reports: typeof reports;
+  roleGroups: typeof roleGroups;
+  transactions: typeof transactions;
   users: typeof users;
 }>;
 

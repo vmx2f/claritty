@@ -107,7 +107,7 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
           {isCollapsed ? (
             <button
               onClick={onToggle}
-              className="w-full flex items-center justify-center p-2 hover:bg-hover rounded-lg transition-colors"
+              className="w-full flex items-center justify-center p-2 hover:bg-hover rounded-lg transition-colors bg-primary-text/10"
               title="Expand sidebar"
             >
               <Bars3Icon className="w-5 h-5 text-primary-text" />
@@ -116,7 +116,7 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
             <div className="relative flex items-center gap-1">
               <button
                 onClick={() => setIsOrgDropdownOpen(!isOrgDropdownOpen)}
-                className="flex-1 min-w-0 flex items-center gap-2 p-2 hover:bg-hover rounded-lg transition-colors group text-left"
+                className="flex-1 min-w-0 flex items-center gap-2 p-2 hover:bg-hover rounded-lg transition-colors group text-left bg-primary-text/10"
               >
                 <div className="w-8 h-8 rounded-lg bg-primary-text/80 flex items-center justify-center shrink-0 overflow-hidden">
                   {orgImageUrl ? (
@@ -137,7 +137,7 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
               </button>
               <button
                 onClick={onToggle}
-                className="p-1.5 shrink-0 hover:bg-hover rounded-lg transition-colors text-secondary-text hover:text-primary-text"
+                className="p-1.5 shrink-0 hover:bg-hover rounded-lg transition-colors text-secondary-text hover:text-primary-text bg-primary-text/10"
                 title="Collapse sidebar"
               >
                 <ChevronLeftIcon className="w-4 h-4" />
@@ -230,13 +230,13 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
           {isLoading ? (
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full animate-pulse bg-hover shrink-0"></div>
-              {!isCollapsed && <div className="h-4 bg-hover rounded flex-1 animate-pulse"></div>}
+              {!isCollapsed && <div className="h-4 bg-primary-text/10 rounded flex-1 animate-pulse"></div>}
             </div>
           ) : user ? (
             <div className="relative">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="w-full flex items-center gap-2 p-2 hover:bg-hover rounded-lg transition-colors"
+                className="w-full flex items-center gap-2 p-2 hover:bg-hover rounded-lg transition-colors bg-primary-text/10"
               >
                 <div className="w-8 h-8 rounded-full bg-primary-text/10 flex items-center justify-center text-white font-bold text-sm shrink-0">
                   {user.name?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
@@ -259,7 +259,7 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                   </div>
                   <button
                     onClick={handleSignOut}
-                    className="w-full text-left px-3 py-2 text-xs text-error hover:bg-error/10 transition-colors"
+                    className="w-full text-left px-3 py-2 text-xs text-error hover:bg-error/10 transition-colors bg-primary-text/10"
                   >
                     Sign Out
                   </button>

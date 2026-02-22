@@ -1,45 +1,70 @@
 'use client';
 
 import { useExtracted } from 'next-intl';
-import ThemeSwitch from "../../_components/layout/theme-switch";
-import LanguageToggle from "../../_components/providers/language-toggle";
 import Slyv from "../../../../public/slyv";
 
 export default function Home() {
   const t = useExtracted("Home");
 
   return (
-    <div className="flex items-center justify-center">
-      <main className="flex gap-10 w-full max-w-3xl flex-col items-center justify-between py-24 px-16 sm:items-start">
-        <Slyv />
-
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight">
-            {t("To get started, edit the page.tsx file.")}
-          </h1>
-          <div className="flex gap-4 items-center">
-            <ThemeSwitch />
-            <LanguageToggle />
+    // Main container takes full height minus navbar
+    <div className="flex flex-col lg:flex-row h-screen pt-16">
+      
+      {/* --- LEFT SIDE: INFO --- */}
+      <main className="w-full lg:w-1/2 flex flex-col justify-center px-8 sm:px-16 lg:px-24 py-12">
+        <div className="max-w-md">
+          
+          {/* Tagline */}
+          <div className="mb-6 inline-flex items-center border border-gray-200 dark:border-gray-800 rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wide">
+            {t("Currently Free for Beta")}
           </div>
-          <p className="max-w-md text-lg leading-8">
-            {t("Looking for a starting point or more instructions? Head over to ")}
-            <a href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium"
-            >
-              {t("Templates ")}
-            </a>
-          </p>
-        </div>
 
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <button>
-            Deploy Now
-          </button>
-          <button className="btn-border">
-            Documentation
-          </button>
+          {/* Headline */}
+          <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight  leading-[1.1] mb-6">
+            {t("Management made ")}
+            <br />
+            <span className="underline decoration-4 decoration-gray-300 dark:decoration-gray-700 underline-offset-4">
+               {t("Clear.")}
+            </span>
+          </h1>
+
+          {/* Subtext */}
+          <p className="text-lg mb-8 leading-relaxed">
+            {t("Claritty is the clutter-free way to manage your small business. No complex spreadsheets, just the essential tools you need to grow.")}
+          </p>
+
+          {/* Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button className="h-12 px-8 rounded-md font-semibold hover:bg-primary-800 transition-all">
+              {t("Start for free")}
+            </button>
+          </div>
+
+          {/* Minimal Footer Info */}
+          <div className="mt-12 pt-8 border-t border-gray-100 text-sm text-gray-400">
+            <p>{t("Never loose track of your businesses")}</p>
+          </div>
         </div>
       </main>
+
+      {/* --- RIGHT SIDE: LOGO + HALFTONE --- */}
+      <aside className="relative w-full lg:w-1/2 bg-gray-50 flex items-center justify-center overflow-hidden border-t lg:border-t-0 lg:border-l border-gray-200 bg-primary-text/10">
+        
+        {/* Halftone Pattern Background */}
+        <div className="absolute inset-0 z-0 opacity-40 dark:opacity-20"
+             style={{
+               backgroundImage: 'radial-gradient(#9ca3af 1px, transparent 1px)',
+               backgroundSize: '24px 24px'
+             }}>
+        </div>
+
+        {/* Big Abstract Logo Placement */}
+        <div className="relative z-10 w-64 h-64 sm:w-96 sm:h-96 animate-in fade-in zoom-in duration-1000">
+           {/* Rendering the Slyv logo very large as the main graphic */}
+           <Slyv className="w-full h-full drop-shadow-8xl " />
+        </div>
+
+      </aside>
     </div>
   );
 }
