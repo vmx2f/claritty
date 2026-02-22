@@ -4,20 +4,13 @@ import { useState, useEffect } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import {
   BuildingOfficeIcon,
-  UsersIcon,
-  BellIcon,
-  Cog6ToothIcon,
   ChevronDownIcon,
+  ChevronLeftIcon,
   UserCircleIcon,
   PlusIcon,
   CheckIcon,
   Bars3Icon,
   XMarkIcon,
-  ShoppingCartIcon,
-  ChartBarIcon,
-  DocumentChartBarIcon,
-  ArrowTrendingUpIcon,
-  CubeIcon,
 } from "@heroicons/react/24/outline";
 import { authClient } from "@/lib/auth-client";
 import { useMutation, useQuery } from "convex/react";
@@ -25,22 +18,14 @@ import { api } from "../../../../convex/_generated/api";
 import { useOrganization } from "../../../contexts/OrganizationContext";
 import ThemeSwitch from "../layout/theme-switch";
 import LanguageToggle from "../providers/language-toggle";
+import { getSidebarNavItems, NAV_TO_PERMISSION } from "@/constants/navigation";
 
 interface SidebarProps {
   isCollapsed: boolean;
   onToggle: () => void;
 }
 
-export const navigation = [
-  { name: "Reports", href: "/dashboard/reports", icon: DocumentChartBarIcon },
-  { name: "Flow Chart", href: "/dashboard/flowchart", icon: ChartBarIcon },
-  { name: "Orders", href: "/dashboard/orders", icon: ShoppingCartIcon },
-  { name: "Ingresos y Salidas", href: "/dashboard/transactions", icon: ArrowTrendingUpIcon },
-  { name: "Products", href: "/dashboard/products", icon: CubeIcon },
-  { name: "Clients", href: "/dashboard/clients", icon: UsersIcon },
-  { name: "Notifications", href: "/dashboard/notifications", icon: BellIcon },
-  { name: "Settings", href: "/dashboard/settings", icon: Cog6ToothIcon },
-];
+export const navigation = getSidebarNavItems();
 
 export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
   const pathname = usePathname();
@@ -117,20 +102,21 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
       <div className={`relative bg-card border-r border-border transition-all duration-300 h-screen flex flex-col ${isCollapsed ? "w-16" : "w-56"
         }`}>
 
-        {/* Header - Organization Selector */}
+        {/* Header - Organization Selector + Collapse */}
         <div className="p-3 border-b border-border">
           {isCollapsed ? (
             <button
               onClick={onToggle}
               className="w-full flex items-center justify-center p-2 hover:bg-hover rounded-lg transition-colors"
+              title="Expand sidebar"
             >
               <Bars3Icon className="w-5 h-5 text-primary-text" />
             </button>
           ) : (
-            <div className="relative">
+            <div className="relative flex items-center gap-1">
               <button
                 onClick={() => setIsOrgDropdownOpen(!isOrgDropdownOpen)}
-                className="w-full flex items-center gap-2 p-2 hover:bg-hover rounded-lg transition-colors group"
+                className="flex-1 min-w-0 flex items-center gap-2 p-2 hover:bg-hover rounded-lg transition-colors group text-left"
               >
                 <div className="w-8 h-8 rounded-lg bg-primary-text/80 flex items-center justify-center shrink-0 overflow-hidden">
                   {orgImageUrl ? (
@@ -147,7 +133,14 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                     {selectedOrg?.userRole || ""}
                   </p>
                 </div>
-                <ChevronDownIcon className={`w-4 h-4 text-secondary-text transition-transform ${isOrgDropdownOpen ? "rotate-180" : ""}`} />
+                <ChevronDownIcon className={`w-4 h-4 text-secondary-text transition-transform shrink-0 ${isOrgDropdownOpen ? "rotate-180" : ""}`} />
+              </button>
+              <button
+                onClick={onToggle}
+                className="p-1.5 shrink-0 hover:bg-hover rounded-lg transition-colors text-secondary-text hover:text-primary-text"
+                title="Collapse sidebar"
+              >
+                <ChevronLeftIcon className="w-4 h-4" />
               </button>
 
               {isOrgDropdownOpen && (
@@ -196,33 +189,22 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto p-2 space-y-0.5">
           {navigation.filter(item => {
-            if (!selectedOrgId || !organizations) return item.name === "Notifications";
+            if (!selectedOrgId || !organizations) return item.key === "notifications";
 
             const currentOrg = organizations.find((o) => o != null && o._id === selectedOrgId);
-            if (!currentOrg) return item.name === "Notifications";
+            if (!currentOrg) return item.key === "notifications";
 
             if (currentOrg.userRole === "owner") return true;
 
-            const areaMapping: Record<string, string> = {
-              "Flow Chart": "flowchart",
-              "Reports": "reports",
-              "Orders": "orders",
-              "Ingresos y Salidas": "transactions",
-              "Products": "products",
-              "Clients": "clients",
-              "Notifications": "notifications",
-              "Settings": "settings"
-            };
-
-            const areaKey = areaMapping[item.name];
+            const areaKey = NAV_TO_PERMISSION[item.key];
             return currentOrg.userPermissions?.includes(areaKey) ?? false;
           }).map((item) => {
             const isActive = pathname === item.href;
-            const showBadge = item.name === "Notifications" && unreadCount && unreadCount > 0;
+            const showBadge = item.key === "notifications" && unreadCount && unreadCount > 0;
 
             return (
               <Link
-                key={item.name}
+                key={item.key}
                 href={item.href}
                 className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all group relative ${isActive
                     ? "bg-primary-text/10 text-white shadow-sm"
@@ -245,13 +227,6 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
 
         {/* Footer - User Profile */}
         <div className="p-3 border-t border-border">
-          {!isCollapsed && (
-            <div className="mb-2 flex items-center gap-2">
-              <ThemeSwitch />
-              <LanguageToggle />
-            </div>
-          )}
-
           {isLoading ? (
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full animate-pulse bg-hover shrink-0"></div>
@@ -278,6 +253,10 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
 
               {isDropdownOpen && !isCollapsed && (
                 <div className="absolute bottom-full left-0 right-0 mb-1 bg-card rounded-lg shadow-xl border border-border overflow-hidden">
+                  <div className="flex items-center gap-2 px-3 py-2 border-b border-border">
+                    <ThemeSwitch />
+                    <LanguageToggle />
+                  </div>
                   <button
                     onClick={handleSignOut}
                     className="w-full text-left px-3 py-2 text-xs text-error hover:bg-error/10 transition-colors"
@@ -343,7 +322,7 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                 <button
                   onClick={createOrganization}
                   disabled={!newOrgName.trim()}
-                  className="flex-1 px-4 py-2 bg-primary-text/10 text-white rounded-lg hover:bg-text-hover transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-2 bg-primary-text text-white rounded-lg hover:bg-text-hover transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Create
                 </button>

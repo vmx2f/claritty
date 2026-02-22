@@ -61,7 +61,8 @@ export const updateOrderStatus = mutation({
         orgId: order.orgId,
         type: "order_payment",
         amount: order.total,
-        description: `Order payment - ${order.customerName}`,
+        description: `Pago orden - ${order.customerName}`,
+        source: "orden",
         date: Date.now(),
         orderId,
       });
@@ -79,7 +80,8 @@ export const updateOrderStatus = mutation({
           orgId: order.orgId,
           type: "order_payment",
           amount: order.total,
-          description: `Order shipped - ${order.customerName}`,
+          description: `Orden enviada - ${order.customerName}`,
+          source: "orden",
           date: Date.now(),
           orderId,
         });

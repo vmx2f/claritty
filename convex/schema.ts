@@ -151,7 +151,8 @@ export default defineSchema({
     ),
     amount: v.number(),
     description: v.string(),
-    source: v.optional(v.string()), // e.g. "Venta", "Proveedor", "Orden"
+    source: v.optional(v.string()),
+    productId: v.optional(v.id("products")), // product expended on (for provider expenses)
     date: v.number(),
     orderId: v.optional(v.id("orders")),
   }).index("by_orgId", ["orgId"])
