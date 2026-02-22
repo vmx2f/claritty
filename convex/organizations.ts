@@ -47,6 +47,15 @@ export const createOrganization = mutation({
   },
 });
 
+// Get file URL for display (e.g. org image)
+export const getFileUrl = query({
+  args: { storageId: v.union(v.id("_storage"), v.null()) },
+  handler: async (ctx, args) => {
+    if (!args.storageId) return null;
+    return await ctx.storage.getUrl(args.storageId);
+  },
+});
+
 // Get all organizations for the current user
 export const getUserOrganizations = query({
   args: {},
@@ -120,12 +129,25 @@ export const getOrganizationDetails = query({
   },
 });
 
+// Generate upload URL for organization image
+export const generateUploadUrl = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+    return await ctx.storage.generateUploadUrl();
+  },
+});
+
 // Update organization
 export const updateOrganization = mutation({
   args: {
     organizationId: v.id("organizations"),
     name: v.optional(v.string()),
     description: v.optional(v.string()),
+    imageStorageId: v.optional(v.id("_storage")),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
@@ -152,6 +174,7 @@ export const updateOrganization = mutation({
 
     if (args.name !== undefined) updateData.name = args.name;
     if (args.description !== undefined) updateData.description = args.description;
+    if (args.imageStorageId !== undefined) updateData.imageStorageId = args.imageStorageId;
 
     await ctx.db.patch(args.organizationId, updateData);
 

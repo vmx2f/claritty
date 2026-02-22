@@ -3,10 +3,10 @@
 import { useEffect } from "react";
 import { useRouter } from "@/i18n/navigation";
 
-export default function Dashboard() {
+export default function OrganizationPage() {
   const router = useRouter();
   useEffect(() => {
-    router.replace("/dashboard/reports");
+    router.replace("/dashboard/settings");
   }, [router]);
   return null;
 }

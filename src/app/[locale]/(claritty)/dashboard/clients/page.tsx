@@ -19,6 +19,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../../../convex/_generated/api";
 import { Id } from "../../../../../../convex/_generated/dataModel";
 import { useOrganization } from "../../../../../contexts/OrganizationContext";
+import { formatCurrency } from "../../../../../lib/currency";
 
 export default function DashboardClients() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -187,7 +188,7 @@ export default function DashboardClients() {
                         />
                         <StatCard
                             title="Total Revenue"
-                            value={`$${(stats?.totalRevenue || 0).toLocaleString()}`}
+                            value={formatCurrency(stats?.totalRevenue || 0)}
                             icon={BuildingOfficeIcon}
                         />
                     </div>
@@ -281,7 +282,7 @@ export default function DashboardClients() {
 
                                     <div className="mt-auto pt-4 border-t border-border flex items-center justify-between relative z-10">
                                         <div className="text-sm text-secondary-text">
-                                            <div className="font-medium text-primary-text">${client.totalSpent.toLocaleString()}</div>
+                                            <div className="font-medium text-primary-text">{formatCurrency(client.totalSpent)}</div>
                                             <div className="text-xs">{client.totalOrders} orders</div>
                                         </div>
                                         <div className="text-xs text-secondary-text">

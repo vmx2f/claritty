@@ -8,30 +8,59 @@ export default defineSchema({
     isCompleted: v.boolean(),
     userId: v.optional(v.string()),
   }).index("userId", ["userId"]),
-  
+
   // Organizations table
   organizations: defineTable({
     name: v.string(),
     description: v.optional(v.string()),
+    imageStorageId: v.optional(v.id("_storage")), // Organization logo/avatar
     ownerId: v.string(), // User ID of the organization owner
     createdAt: v.number(),
     updatedAt: v.number(),
     isActive: v.boolean(),
   }).index("ownerId", ["ownerId"]),
-  
+
   // Organization members table
   organizationMembers: defineTable({
     organizationId: v.id("organizations"),
     userId: v.string(),
     role: v.union(v.literal("owner"), v.literal("admin"), v.literal("member"), v.literal("viewer")),
-    permissions: v.array(v.string()), // Specific permissions like "create", "edit", "delete"
+    roleName: v.optional(v.string()), // Custom role name like "Sales Manager", "Developer", etc.
+    roleGroupId: v.optional(v.id("roleGroups")), // Link to role group
+    permissions: v.array(v.string()), // Specific areas like "dashboard", "orders", "clients", etc.
     invitedBy: v.string(), // User ID who invited this member
     joinedAt: v.number(),
     isActive: v.boolean(),
   })
     .index("by_organization", ["organizationId"])
-    .index("by_user", ["userId"]),
-  
+    .index("by_user", ["userId"])
+    .index("by_role_group", ["roleGroupId"]),
+
+  // Role groups for organizing members with same permissions
+  roleGroups: defineTable({
+    organizationId: v.id("organizations"),
+    name: v.string(), // e.g., "Sales Team", "Developers", "Managers"
+    description: v.optional(v.string()),
+    permissions: v.array(v.string()), // Shared permissions for this group
+    createdBy: v.string(),
+    createdAt: v.number(),
+  })
+    .index("by_organization", ["organizationId"]),
+
+  // Invitations table
+  invitations: defineTable({
+    organizationId: v.id("organizations"),
+    email: v.string(),
+    role: v.union(v.literal("admin"), v.literal("member"), v.literal("viewer")),
+    permissions: v.array(v.string()),
+    invitedBy: v.string(),
+    status: v.union(v.literal("pending"), v.literal("accepted"), v.literal("revoked")),
+    createdAt: v.number(),
+    expiresAt: v.number(),
+  })
+    .index("by_organization", ["organizationId"])
+    .index("by_email", ["email"]),
+
   // Notifications table
   notifications: defineTable({
     userId: v.string(), // Recipient user ID
@@ -50,7 +79,7 @@ export default defineSchema({
     createdAt: v.number(),
     metadata: v.optional(v.any()), // Additional data for the notification
   }).index("by_user", ["userId"]),
-  
+
   // Activity log for organizations
   organizationActivity: defineTable({
     organizationId: v.id("organizations"),
@@ -67,11 +96,11 @@ export default defineSchema({
     timestamp: v.number(),
     metadata: v.optional(v.any()),
   }).index("organizationId", ["organizationId"]),
-  
+
   // Orders table
   orders: defineTable({
     orgId: v.id("organizations"),
-    clientId: v.id("clients"),
+    clientId: v.optional(v.id("clients")),
     customerName: v.string(),
     items: v.array(
       v.object({
@@ -91,7 +120,7 @@ export default defineSchema({
     paidAt: v.optional(v.number()),
     shippedAt: v.optional(v.number())
   }).index("by_orgId", ["orgId"]),
-  
+
   // Clients table
   clients: defineTable({
     orgId: v.id("organizations"),
@@ -110,18 +139,34 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   }).index("by_orgId", ["orgId"]),
-  
-  // Capital transactions table
+
+  // Capital transactions table (Ingresos y Salidas)
   capitalTransactions: defineTable({
     orgId: v.id("organizations"),
     type: v.union(
+      v.literal("income"),
       v.literal("order_payment"),
-      v.literal("inventory_purchase"),
-      v.literal("expense")
+      v.literal("expense"),
+      v.literal("inventory_purchase")
     ),
     amount: v.number(),
     description: v.string(),
+    source: v.optional(v.string()), // e.g. "Venta", "Proveedor", "Orden"
     date: v.number(),
-    orderId: v.optional(v.id("orders")) // Link to order if applicable
+    orderId: v.optional(v.id("orders")),
+  }).index("by_orgId", ["orgId"])
+    .index("by_orgId_date", ["orgId", "date"]),
+
+  // Products table
+  products: defineTable({
+    orgId: v.id("organizations"),
+    name: v.string(),
+    description: v.optional(v.string()),
+    price: v.number(),
+    sku: v.optional(v.string()),
+    stock: v.optional(v.number()),
+    unit: v.optional(v.string()), // e.g., "unit", "kg", "box"
+    createdAt: v.number(),
+    updatedAt: v.number(),
   }).index("by_orgId", ["orgId"]),
 });

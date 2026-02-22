@@ -17,6 +17,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../../../convex/_generated/api";
 import { Id } from "../../../../../../convex/_generated/dataModel";
 import { useOrganization } from "../../../../../contexts/OrganizationContext";
+import { formatCurrency } from "../../../../../lib/currency";
 
 export default function DashboardOrders() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -31,7 +32,7 @@ export default function DashboardOrders() {
 
     // Get selected organization from context
     const { selectedOrgId } = useOrganization();
-    
+
     const orders = useQuery(api.orders.getOrders, selectedOrgId ? { orgId: selectedOrgId } : "skip");
     const clients = useQuery(api.clients.getClients, selectedOrgId ? { orgId: selectedOrgId } : "skip");
     const createOrderMutation = useMutation(api.orders.createOrder);
@@ -92,11 +93,11 @@ export default function DashboardOrders() {
             console.error("No organization selected");
             return;
         }
-        
+
         try {
             await createOrderMutation({
                 orgId: selectedOrgId,
-                clientId: newOrder.clientId,
+                clientId: newOrder.clientId || undefined,
                 customerName: newOrder.customerName,
                 items: newOrder.items,
                 total: newOrder.total
@@ -115,7 +116,7 @@ export default function DashboardOrders() {
 
     return (
         <div className="p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500">
-            
+
             {/* Check if organization exists */}
             {!selectedOrgId ? (
                 <div className="text-center py-20 bg-card rounded-xl border border-border border-dashed">
@@ -132,7 +133,7 @@ export default function DashboardOrders() {
                             <h1 className="text-3xl font-bold text-primary-text tracking-tight">Orders</h1>
                             <p className="text-secondary-text mt-1">Manage customer orders and track shipments.</p>
                         </div>
-                        <button 
+                        <button
                             onClick={() => setShowCreateModal(true)}
                             className="flex items-center gap-2 bg-primary-text text-main px-6 py-2.5 rounded-full hover:bg-text-hover transition-all shadow-lg hover:shadow-xl active:scale-95 font-medium"
                         >
@@ -234,7 +235,7 @@ export default function DashboardOrders() {
                                                 {order.items.slice(0, 2).map((item, idx) => (
                                                     <div key={idx} className="flex justify-between">
                                                         <span className="truncate">{item.product} x{item.quantity}</span>
-                                                        <span className="font-medium text-primary-text">${item.price * item.quantity}</span>
+                                                        <span className="font-medium text-primary-text">{formatCurrency(item.price * item.quantity)}</span>
                                                     </div>
                                                 ))}
                                                 {order.items.length > 2 && (
@@ -245,7 +246,7 @@ export default function DashboardOrders() {
 
                                         <div className="mt-auto pt-4 border-t border-border flex items-center justify-between relative z-10">
                                             <div className="text-lg font-semibold text-primary-text">
-                                                ${order.total}
+                                                {formatCurrency(order.total)}
                                             </div>
                                             <div className="text-xs text-secondary-text">
                                                 {new Date(order.createdAt).toLocaleDateString()}
@@ -367,7 +368,7 @@ export default function DashboardOrders() {
                                     <div className="pt-4 border-t border-border">
                                         <div className="flex justify-between items-center">
                                             <span className="text-lg font-semibold text-primary-text">Total:</span>
-                                            <span className="text-2xl font-bold text-primary-text">${newOrder.total}</span>
+                                            <span className="text-2xl font-bold text-primary-text">{formatCurrency(newOrder.total)}</span>
                                         </div>
                                     </div>
 
