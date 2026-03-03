@@ -16,6 +16,7 @@ import {
   UsersIcon,
   BellIcon,
   Cog6ToothIcon,
+  ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/outline";
 import {
   DocumentChartBarIcon as DocumentChartBarIconSolid,
@@ -26,6 +27,7 @@ import {
   UsersIcon as UsersIconSolid,
   BellIcon as BellIconSolid,
   Cog6ToothIcon as Cog6ToothIconSolid,
+  ChatBubbleLeftRightIcon as ChatBubbleLeftRightIconSolid,
 } from "@heroicons/react/24/solid";
 
 export const NAV_CONFIG = {
@@ -36,6 +38,7 @@ export const NAV_CONFIG = {
   products: { sidebar: true, bottomNav: false },
   clients: { sidebar: true, bottomNav: true },
   notifications: { sidebar: true, bottomNav: false },
+  chat: { sidebar: true, bottomNav: false },
   settings: { sidebar: true, bottomNav: true },
 } as const;
 
@@ -47,6 +50,7 @@ export const SIDEBAR_NAV_ITEMS: Array<{
   href: string;
   icon: ComponentType<{ className?: string }>;
 }> = [
+  { key: "chat", name: "Chat", href: "/dashboard/chat", icon: ChatBubbleLeftRightIcon },
   { key: "reports", name: "Reports", href: "/dashboard/reports", icon: DocumentChartBarIcon },
   { key: "flowChart", name: "Flow Chart", href: "/dashboard/flowchart", icon: ChartBarIcon },
   { key: "orders", name: "Orders", href: "/dashboard/orders", icon: ShoppingCartIcon },
@@ -64,6 +68,7 @@ export const BOTTOM_NAV_ITEMS: Array<{
   icon: ComponentType<{ className?: string }>;
   iconSolid: ComponentType<{ className?: string }>;
 }> = [
+  { key: "chat", name: "Chat", href: "/dashboard/chat", icon: ChatBubbleLeftRightIcon, iconSolid: ChatBubbleLeftRightIconSolid },
   { key: "reports", name: "Reports", href: "/dashboard/reports", icon: DocumentChartBarIcon, iconSolid: DocumentChartBarIconSolid },
   { key: "orders", name: "Orders", href: "/dashboard/orders", icon: ShoppingCartIcon, iconSolid: ShoppingCartIconSolid },
   { key: "transactions", name: "Caja", href: "/dashboard/transactions", icon: ArrowTrendingUpIcon, iconSolid: ArrowTrendingUpIconSolid },
@@ -80,6 +85,7 @@ export const NAV_TO_PERMISSION: Record<NavKey, string> = {
   products: "products",
   clients: "clients",
   notifications: "notifications",
+  chat: "reports",
   settings: "settings",
 };
 

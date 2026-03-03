@@ -3,15 +3,19 @@
 import { useState, useEffect } from "react";
 import { usePathname } from "@/i18n/navigation";
 import { authClient } from "@/lib/auth-client";
-import { navigation } from "./sidebar";
+import { isNavItemActive } from "@/blocks/runtime";
+import { getSidebarNavItems } from "@/constants/navigation";
+import { useOrganization } from "@/contexts/OrganizationContext";
 import ThemeSwitch from "../layout/theme-switch";
 import LanguageToggle from "../providers/language-toggle";
 
 export default function TopBar() {
   const pathname = usePathname();
+  const { activeBlocks } = useOrganization();
   const [user, setUser] = useState<{ name?: string; email?: string } | null>(null);
   const [profileOpen, setProfileOpen] = useState(false);
 
+  const navigation = getSidebarNavItems().filter((item) => isNavItemActive(item.key, activeBlocks));
   const currentPage = navigation.find((item) => item.href === pathname);
   const pageName = currentPage ? currentPage.name : pathname === "/dashboard" ? "Home" : "Overview";
 

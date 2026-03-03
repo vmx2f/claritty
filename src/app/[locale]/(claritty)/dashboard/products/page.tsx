@@ -85,7 +85,7 @@ export default function ProductsPage() {
     }
   };
 
-  const openEdit = (p: (typeof products)[0]) => {
+  const openEdit = (p: NonNullable<typeof products>[number]) => {
     setForm({
       name: p.name,
       description: p.description ?? "",

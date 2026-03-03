@@ -19,6 +19,7 @@ import { useOrganization } from "../../../contexts/OrganizationContext";
 import ThemeSwitch from "../layout/theme-switch";
 import LanguageToggle from "../providers/language-toggle";
 import { getSidebarNavItems, NAV_TO_PERMISSION } from "@/constants/navigation";
+import { isNavItemActive, normalizeOrganizationBlockState } from "@/blocks/runtime";
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -29,7 +30,7 @@ export const navigation = getSidebarNavItems();
 
 export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
   const pathname = usePathname();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<{ name?: string; email?: string } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isOrgDropdownOpen, setIsOrgDropdownOpen] = useState(false);
@@ -41,7 +42,7 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
   const organizations = useQuery(api.organizations.getUserOrganizations);
   const unreadCount = useQuery(api.notifications.getUnreadNotificationCount);
   const createOrgMutation = useMutation(api.organizations.createOrganization);
-  const { selectedOrgId, setSelectedOrgId } = useOrganization();
+  const { selectedOrgId, setSelectedOrgId, activeBlocks, setActiveBlocks } = useOrganization();
   const selectedOrg = organizations?.find((o) => o != null && o._id === selectedOrgId);
   const orgImageStorageId = selectedOrg?.imageStorageId ?? null;
   const orgImageUrl = useQuery(
@@ -54,7 +55,7 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
       try {
         const session = await authClient.getSession();
         setUser(session.data?.user || null);
-      } catch (error) {
+      } catch {
         setUser(null);
       } finally {
         setIsLoading(false);
@@ -70,6 +71,16 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
       setSelectedOrgId(first._id);
     }
   }, [organizations, selectedOrgId, setSelectedOrgId]);
+
+  useEffect(() => {
+    if (!organizations || !selectedOrgId) {
+      return;
+    }
+
+    const currentOrg = organizations.find((org) => org != null && org._id === selectedOrgId);
+    const normalized = normalizeOrganizationBlockState(currentOrg?.blockConfig);
+    setActiveBlocks(normalized.active);
+  }, [organizations, selectedOrgId, setActiveBlocks]);
 
   const handleSignOut = async () => {
     try {
@@ -99,48 +110,48 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
 
   return (
     <>
-      <div className={`relative bg-card border-r border-border transition-all duration-300 h-screen flex flex-col ${isCollapsed ? "w-16" : "w-56"
+      <div className={`relative bg-card border-r border-border transition-all duration-300 h-screen flex flex-col ${isCollapsed ? "w-14" : "w-52"
         }`}>
 
         {/* Header - Organization Selector + Collapse */}
-        <div className="p-3 border-b border-border">
+        <div className="p-2.5 border-b border-border">
           {isCollapsed ? (
             <button
               onClick={onToggle}
-              className="w-full flex items-center justify-center p-2 hover:bg-hover rounded-lg transition-colors bg-primary-text/10"
-              title="Expand sidebar"
-            >
-              <Bars3Icon className="w-5 h-5 text-primary-text" />
-            </button>
+                className="w-full flex items-center justify-center p-1.5 hover:bg-hover rounded-lg transition-colors bg-primary-text/10"
+                title="Expand sidebar"
+              >
+                <Bars3Icon className="w-4 h-4 text-primary-text" />
+              </button>
           ) : (
             <div className="relative flex items-center gap-1">
               <button
                 onClick={() => setIsOrgDropdownOpen(!isOrgDropdownOpen)}
-                className="flex-1 min-w-0 flex items-center gap-2 p-2 hover:bg-hover rounded-lg transition-colors group text-left bg-primary-text/10"
+                className="flex-1 min-w-0 flex items-center gap-2 p-1.5 hover:bg-hover rounded-lg transition-colors group text-left bg-primary-text/10"
               >
-                <div className="w-8 h-8 rounded-lg bg-primary-text/80 flex items-center justify-center shrink-0 overflow-hidden">
+                <div className="w-7 h-7 rounded-lg bg-primary-text/80 flex items-center justify-center shrink-0 overflow-hidden">
                   {orgImageUrl ? (
                     <img src={orgImageUrl} alt="" className="w-full h-full object-cover" />
                   ) : (
-                    <BuildingOfficeIcon className="w-4 h-4 text-white" />
+                    <BuildingOfficeIcon className="w-3.5 h-3.5 text-white" />
                   )}
                 </div>
                 <div className="flex-1 min-w-0 text-left">
-                  <p className="text-xs font-semibold text-primary-text truncate">
+                  <p className="text-[11px] font-semibold text-primary-text truncate">
                     {selectedOrg?.name || "Select Org"}
                   </p>
-                  <p className="text-[10px] text-secondary-text truncate">
+                  <p className="text-[9px] text-secondary-text truncate">
                     {selectedOrg?.userRole || ""}
                   </p>
                 </div>
-                <ChevronDownIcon className={`w-4 h-4 text-secondary-text transition-transform shrink-0 ${isOrgDropdownOpen ? "rotate-180" : ""}`} />
+                <ChevronDownIcon className={`w-3.5 h-3.5 text-secondary-text transition-transform shrink-0 ${isOrgDropdownOpen ? "rotate-180" : ""}`} />
               </button>
               <button
                 onClick={onToggle}
-                className="p-1.5 shrink-0 hover:bg-hover rounded-lg transition-colors text-secondary-text hover:text-primary-text bg-primary-text/10"
+                className="p-1 shrink-0 hover:bg-hover rounded-lg transition-colors text-secondary-text hover:text-primary-text bg-primary-text/10"
                 title="Collapse sidebar"
               >
-                <ChevronLeftIcon className="w-4 h-4" />
+                <ChevronLeftIcon className="w-3.5 h-3.5" />
               </button>
 
               {isOrgDropdownOpen && (
@@ -187,12 +198,16 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto p-2 space-y-0.5">
+        <nav className="flex-1 overflow-y-auto p-1.5 space-y-0.5">
           {navigation.filter(item => {
             if (!selectedOrgId || !organizations) return item.key === "notifications";
 
             const currentOrg = organizations.find((o) => o != null && o._id === selectedOrgId);
             if (!currentOrg) return item.key === "notifications";
+
+            if (!isNavItemActive(item.key, activeBlocks)) {
+              return false;
+            }
 
             if (currentOrg.userRole === "owner") return true;
 
@@ -206,14 +221,14 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
               <Link
                 key={item.key}
                 href={item.href}
-                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all group relative ${isActive
-                    ? "bg-primary-text/10 text-white shadow-sm"
+                className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg transition-all group relative ${isActive
+                    ? "bg-primary-text/15 text-primary-text shadow-sm"
                     : "text-secondary-text hover:bg-hover/10 hover:text-primary-text"
                   } ${isCollapsed ? "justify-center" : ""}`}
               >
-                <item.icon className={`w-5 h-5 shrink-0 ${isActive ? "text-white" : ""}`} />
+                <item.icon className={`w-4 h-4 shrink-0 ${isActive ? "text-primary-text" : ""}`} />
                 {!isCollapsed && (
-                  <span className="text-sm font-medium truncate">{item.name}</span>
+                  <span className="text-xs font-medium truncate">{item.name}</span>
                 )}
                 {showBadge && (
                   <span className={`${isCollapsed ? "absolute -top-1 -right-1" : "ml-auto"} w-5 h-5 bg-error text-white text-[10px] font-bold rounded-full flex items-center justify-center`}>
@@ -226,7 +241,7 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
         </nav>
 
         {/* Footer - User Profile */}
-        <div className="p-3 border-t border-border">
+        <div className="p-2.5 border-t border-border">
           {isLoading ? (
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full animate-pulse bg-hover shrink-0"></div>
@@ -236,17 +251,17 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
             <div className="relative">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="w-full flex items-center gap-2 p-2 hover:bg-hover rounded-lg transition-colors bg-primary-text/10"
+                className="w-full flex items-center gap-2 p-1.5 hover:bg-hover rounded-lg transition-colors bg-primary-text/10"
               >
-                <div className="w-8 h-8 rounded-full bg-primary-text/10 flex items-center justify-center text-white font-bold text-sm shrink-0">
+                <div className="w-7 h-7 rounded-full bg-primary-text/12 flex items-center justify-center text-primary-text font-bold text-xs shrink-0">
                   {user.name?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
                 </div>
                 {!isCollapsed && (
                   <div className="flex-1 min-w-0 text-left">
-                    <p className="text-xs font-medium text-primary-text truncate">
+                    <p className="text-[11px] font-medium text-primary-text truncate">
                       {user.name || "User"}
                     </p>
-                    <p className="text-[10px] text-secondary-text truncate">{user.email}</p>
+                    <p className="text-[9px] text-secondary-text truncate">{user.email}</p>
                   </div>
                 )}
               </button>

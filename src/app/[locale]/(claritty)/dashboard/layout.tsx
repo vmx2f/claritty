@@ -6,9 +6,11 @@ import { useRouter, usePathname } from "next/navigation";
 import Sidebar from "@/app/_components/dashboard/sidebar";
 import TopBar from "@/app/_components/dashboard/top-bar";
 import BottomNav from "@/app/_components/dashboard/bottom-nav";
+import CommandPalette from "@/app/_components/dashboard/command-palette";
 import { OrganizationProvider } from "@/contexts/OrganizationContext";
 import { useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
+import { useCommandPalette } from "@/hooks/useCommandPalette";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
@@ -17,6 +19,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  useCommandPalette();
 
   // Check if user has any organizations
   const organizations = useQuery(api.organizations.getUserOrganizations);
@@ -30,7 +33,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         } else {
           router.push("/login");
         }
-      } catch (error) {
+      } catch {
         router.push("/login");
       } finally {
         setIsLoading(false);
@@ -55,7 +58,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       if (organizations.length === 0 && !isOnboardingPage) {
         router.push("/onboarding");
       } else if (organizations.length > 0 && isOnboardingPage) {
-        router.push("/dashboard/reports");
+        router.push("/dashboard/chat");
       }
     }
   }, [organizations, isAuthenticated, isLoading, pathname, router]);
@@ -90,6 +93,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {/* Bottom nav: mobile only */}
           {isMobile && <BottomNav />}
         </div>
+        <CommandPalette />
       </section>
     </OrganizationProvider>
   );

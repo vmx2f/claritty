@@ -1,11 +1,14 @@
 "use client";
 
 import { Link, usePathname } from "@/i18n/navigation";
+import { isNavItemActive } from "@/blocks/runtime";
 import { getBottomNavItems } from "@/constants/navigation";
+import { useOrganization } from "@/contexts/OrganizationContext";
 
 export default function BottomNav() {
   const pathname = usePathname();
-  const items = getBottomNavItems();
+  const { activeBlocks } = useOrganization();
+  const items = getBottomNavItems().filter((item) => isNavItemActive(item.key, activeBlocks));
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-card border-t border-border pb-[env(safe-area-inset-bottom)]">

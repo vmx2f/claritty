@@ -1,6 +1,18 @@
 import { query, mutation, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
 
+const DEFAULT_ACTIVE_BLOCKS = [
+  "chat",
+  "notifications",
+  "settings",
+  "reports",
+  "products",
+  "clients",
+  "orders",
+  "incomes",
+  "outputs",
+];
+
 // Create a new organization
 export const createOrganization = mutation({
   args: {
@@ -18,6 +30,11 @@ export const createOrganization = mutation({
       name: args.name,
       description: args.description,
       ownerId: identity.subject,
+      blockConfig: {
+        active: DEFAULT_ACTIVE_BLOCKS,
+        disabledAt: {},
+        preset: "standard",
+      },
       createdAt: Date.now(),
       updatedAt: Date.now(),
       isActive: true,
@@ -168,7 +185,12 @@ export const updateOrganization = mutation({
       throw new Error("Insufficient permissions");
     }
 
-    const updateData: any = {
+    const updateData: {
+      updatedAt: number;
+      name?: string;
+      description?: string;
+      imageStorageId?: typeof args.imageStorageId;
+    } = {
       updatedAt: Date.now(),
     };
 
@@ -233,5 +255,48 @@ export const deleteOrganization = mutation({
       details: "Organization was deleted",
       timestamp: Date.now(),
     });
+  },
+});
+
+export const updateOrganizationBlockConfig = mutation({
+  args: {
+    organizationId: v.id("organizations"),
+    blockConfig: v.object({
+      active: v.array(v.string()),
+      disabledAt: v.record(v.string(), v.number()),
+      preset: v.optional(v.string()),
+    }),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthorized");
+    }
+
+    const memberships = await ctx.db
+      .query("organizationMembers")
+      .withIndex("by_organization", (q) => q.eq("organizationId", args.organizationId))
+      .collect();
+
+    const membership = memberships.find((m) => m.userId === identity.subject && m.isActive);
+    if (!membership || (membership.role !== "owner" && !membership.permissions.includes("settings"))) {
+      throw new Error("Insufficient permissions");
+    }
+
+    await ctx.db.patch(args.organizationId, {
+      blockConfig: args.blockConfig,
+      updatedAt: Date.now(),
+    });
+
+    await ctx.db.insert("organizationActivity", {
+      organizationId: args.organizationId,
+      userId: identity.subject,
+      action: "updated",
+      details: "Organization block configuration updated",
+      timestamp: Date.now(),
+    });
+
+    return null;
   },
 });

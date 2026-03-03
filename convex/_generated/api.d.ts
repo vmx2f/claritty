@@ -12,6 +12,7 @@ import type * as auth from "../auth.js";
 import type * as capital from "../capital.js";
 import type * as clients from "../clients.js";
 import type * as http from "../http.js";
+import type * as logs from "../logs.js";
 import type * as members from "../members.js";
 import type * as notifications from "../notifications.js";
 import type * as orders from "../orders.js";
@@ -33,6 +34,7 @@ declare const fullApi: ApiFromModules<{
   capital: typeof capital;
   clients: typeof clients;
   http: typeof http;
+  logs: typeof logs;
   members: typeof members;
   notifications: typeof notifications;
   orders: typeof orders;

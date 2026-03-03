@@ -15,6 +15,13 @@ export default defineSchema({
     description: v.optional(v.string()),
     imageStorageId: v.optional(v.id("_storage")), // Organization logo/avatar
     ownerId: v.string(), // User ID of the organization owner
+    blockConfig: v.optional(
+      v.object({
+        active: v.array(v.string()),
+        disabledAt: v.record(v.string(), v.number()),
+        preset: v.optional(v.string()),
+      })
+    ),
     createdAt: v.number(),
     updatedAt: v.number(),
     isActive: v.boolean(),
@@ -170,4 +177,24 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   }).index("by_orgId", ["orgId"]),
+
+  // Cross-surface activity log for command palette and chat
+  actionLogs: defineTable({
+    orgId: v.optional(v.id("organizations")),
+    actionId: v.string(),
+    actionLabel: v.string(),
+    category: v.string(),
+    entryType: v.union(
+      v.literal("user-action"),
+      v.literal("system-log"),
+      v.literal("inline-form"),
+      v.literal("success"),
+      v.literal("error")
+    ),
+    message: v.string(),
+    payload: v.optional(v.any()),
+    createdAt: v.number(),
+  })
+    .index("by_orgId", ["orgId"])
+    .index("by_createdAt", ["createdAt"]),
 });

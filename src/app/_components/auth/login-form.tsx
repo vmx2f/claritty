@@ -4,12 +4,14 @@ import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { useExtracted } from "next-intl";
 import Link from "next/link";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 export function LoginForm() {
   const t = useExtracted('auth')
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -24,7 +26,7 @@ export function LoginForm() {
         password,
       });
       // Force page reload to ensure session is picked up
-      window.location.href = "/dashboard";
+      window.location.href = "/dashboard/chat";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
@@ -80,14 +82,27 @@ export function LoginForm() {
               {t('Forgot your password?')}
             </Link>
           </div>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className=" w-full px-3 py-2 border border-subtle rounded-lg focus:outline-none transition-all duration-300 focus:ring-3 focus:ring-subtle/90 bg-card"
-            required
-          />
+          <div className="relative">
+            <input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-3 py-2 pr-10 border border-subtle rounded-lg focus:outline-none transition-all duration-300 focus:ring-3 focus:ring-subtle/90 bg-card"
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary-text hover:text-primary-text transition-colors p-0"
+            >
+              {showPassword ? (
+                <EyeSlashIcon className="w-4 h-4" />
+              ) : (
+                <EyeIcon className="w-4 h-4" />
+              )}
+            </button>
+          </div>
         </div>
 
         {error && (

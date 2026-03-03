@@ -4,31 +4,30 @@ import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { useExtracted } from "next-intl";
 import Link from "next/link";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 export function RegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const t = useExtracted('auth');
 
-  // Password validation checks
+  // More permissive password validation checks
   const passwordChecks = {
-    minLength: password.length >= 8,
-    hasUpperCase: /[A-Z]/.test(password),
-    hasLowerCase: /[a-z]/.test(password),
-    hasNumber: /\d/.test(password),
-    hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+    minLength: password.length >= 6,
+    hasLetter: /[a-zA-Z]/.test(password),
   };
 
   const isPasswordValid = Object.values(passwordChecks).every(check => check);
 
   const getPasswordStrength = () => {
     const passedChecks = Object.values(passwordChecks).filter(Boolean).length;
-    if (passedChecks <= 2) return { text: 'Weak', color: 'text-red-500' };
-    if (passedChecks <= 4) return { text: 'Medium', color: 'text-yellow-500' };
-    return { text: 'Strong', color: 'text-green-500' };
+    if (passedChecks === 1) return { text: 'Fair', color: 'text-yellow-500' };
+    if (passedChecks === 2) return { text: 'Good', color: 'text-green-500' };
+    return { text: 'Weak', color: 'text-red-500' };
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -49,8 +48,8 @@ export function RegisterForm() {
         password,
         name,
       });
-      // Redirect to dashboard after successful registration
-      window.location.href = "/dashboard";
+      // Redirect to chat after successful registration
+      window.location.href = "/dashboard/chat";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");
     } finally {
@@ -116,18 +115,31 @@ export function RegisterForm() {
           <label htmlFor="password" className="block  font-medium mb-2">
             {t('Password')}
           </label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className=" w-full px-3 py-2 border border-subtle rounded-lg focus:outline-none transition-all duration-300 focus:ring-3 focus:ring-subtle/90 bg-card"
-            required
-            minLength={8}
-          />
+          <div className="relative">
+            <input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-3 py-2 pr-10 border border-subtle rounded-lg focus:outline-none transition-all duration-300 focus:ring-3 focus:ring-subtle/90 bg-card"
+              required
+              minLength={6}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary-text hover:text-primary-text transition-colors p-0"
+            >
+              {showPassword ? (
+                <EyeSlashIcon className="w-4 h-4" />
+              ) : (
+                <EyeIcon className="w-4 h-4" />
+              )}
+            </button>
+          </div>
           
-          {/* Password strength indicator */}
-          <div className="mt-2">
+          {/* Simplified password requirements */}
+          <div className="mt-3">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs text-subtle">Password strength:</span>
               <span className={`text-xs font-medium ${password ? getPasswordStrength().color : 'text-gray-400'}`}>
@@ -139,56 +151,30 @@ export function RegisterForm() {
                 className={`h-2 rounded-full transition-all duration-300 ${
                   !password ? 'bg-gray-300 dark:bg-gray-600 w-0' :
                   getPasswordStrength().text === 'Weak' ? 'bg-red-500 w-1/3' :
-                  getPasswordStrength().text === 'Medium' ? 'bg-yellow-500 w-2/3' :
+                  getPasswordStrength().text === 'Fair' ? 'bg-yellow-500 w-2/3' :
                   'bg-green-500 w-full'
                 }`}
               />
             </div>
-          </div>
-
-          {/* Password requirements checklist */}
-          <div className="mt-3 space-y-1">
-            <p className="text-xs text-subtle mb-2">Password must contain:</p>
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className={`text-xs ${passwordChecks.minLength ? 'text-success' : 'text-gray-400'}`}>
-                  {passwordChecks.minLength ? '✓' : '○'}
-                </span>
-                <span className={`text-xs ${passwordChecks.minLength ? 'text-success' : 'text-gray-400'}`}>
-                  At least 8 characters
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className={`text-xs ${passwordChecks.hasUpperCase ? 'text-success' : 'text-gray-400'}`}>
-                  {passwordChecks.hasUpperCase ? '✓' : '○'}
-                </span>
-                <span className={`text-xs ${passwordChecks.hasUpperCase ? 'text-success' : 'text-gray-400'}`}>
-                  One uppercase letter
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className={`text-xs ${passwordChecks.hasLowerCase ? 'text-success' : 'text-gray-400'}`}>
-                  {passwordChecks.hasLowerCase ? '✓' : '○'}
-                </span>
-                <span className={`text-xs ${passwordChecks.hasLowerCase ? 'text-success' : 'text-gray-400'}`}>
-                  One lowercase letter
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className={`text-xs ${passwordChecks.hasNumber ? 'text-success' : 'text-gray-400'}`}>
-                  {passwordChecks.hasNumber ? '✓' : '○'}
-                </span>
-                <span className={`text-xs ${passwordChecks.hasNumber ? 'text-success' : 'text-gray-400'}`}>
-                  One number
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className={`text-xs ${passwordChecks.hasSpecialChar ? 'text-success' : 'text-gray-400'}`}>
-                  {passwordChecks.hasSpecialChar ? '✓' : '○'}
-                </span>
-                <span className={`text-xs ${passwordChecks.hasSpecialChar ? 'text-success' : 'text-gray-400'}`}>
-                  One special character (!@#$%^&* etc.)
-                </span>
+            <div className="mt-2 space-y-1">
+              <p className="text-xs text-subtle mb-2">Password must contain:</p>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className={`text-xs ${passwordChecks.minLength ? 'text-success' : 'text-gray-400'}`}>
+                    {passwordChecks.minLength ? '✓' : '○'}
+                  </span>
+                  <span className={`text-xs ${passwordChecks.minLength ? 'text-success' : 'text-gray-400'}`}>
+                    At least 6 characters
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className={`text-xs ${passwordChecks.hasLetter ? 'text-success' : 'text-gray-400'}`}>
+                    {passwordChecks.hasLetter ? '✓' : '○'}
+                  </span>
+                  <span className={`text-xs ${passwordChecks.hasLetter ? 'text-success' : 'text-gray-400'}`}>
+                    At least one letter
+                  </span>
+                </div>
               </div>
             </div>
           </div>

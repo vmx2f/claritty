@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useMutation } from "convex/react";
+import { useState, useEffect } from "react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import { useRouter } from "@/i18n/navigation";
 import {
@@ -17,6 +17,31 @@ export default function OnboardingPage() {
     const [isCreating, setIsCreating] = useState(false);
 
     const createOrganization = useMutation(api.organizations.createOrganization);
+    const userOrganizations = useQuery(api.organizations.getUserOrganizations);
+
+    // Redirect to dashboard if user already has organizations
+    useEffect(() => {
+        if (userOrganizations && userOrganizations.length > 0) {
+            router.push("/dashboard/chat");
+        }
+    }, [userOrganizations, router]);
+
+    // Show loading state while checking organizations
+    if (userOrganizations === undefined) {
+        return (
+            <div className="min-h-screen bg-main flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-8 h-8 border-2 border-primary-text border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                    <p className="text-secondary-text">Checking your organizations...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Don't render the form if user has organizations (will redirect)
+    if (userOrganizations && userOrganizations.length > 0) {
+        return null;
+    }
 
     const handleCreateOrg = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -29,8 +54,8 @@ export default function OnboardingPage() {
                 description: ""
             });
 
-            // Redirect to dashboard
-            router.push("/dashboard");
+            // Redirect to chat
+            router.push("/dashboard/chat");
         } catch (error) {
             console.error("Failed to create organization:", error);
             alert("Failed to create organization. Please try again.");
@@ -51,7 +76,7 @@ export default function OnboardingPage() {
                         Welcome to Claritty! 🎉
                     </h1>
                     <p className="text-lg text-secondary-text">
-                        Let's get started by creating your first organization
+                        Let&apos;s get started by creating your first organization
                     </p>
                 </div>
 
@@ -103,7 +128,7 @@ export default function OnboardingPage() {
 
                         {/* Benefits list */}
                         <div className="bg-main/50 rounded-xl p-6 space-y-3">
-                            <h3 className="text-sm font-semibold text-primary-text mb-4">What you'll get:</h3>
+                            <h3 className="text-sm font-semibold text-primary-text mb-4">What you&apos;ll get:</h3>
                             {[
                                 "Manage orders and clients efficiently",
                                 "Track capital transactions in real-time",

@@ -6,27 +6,13 @@ import { api } from "../../../../../../convex/_generated/api";
 import { Id } from "../../../../../../convex/_generated/dataModel";
 import { useOrganization } from "../../../../../contexts/OrganizationContext";
 import { formatCurrency } from "../../../../../lib/currency";
+import { EXPENSE_SOURCES, INCOME_SOURCES } from "@/app/_constants/transactions";
 import {
   ArrowTrendingUpIcon,
   ArrowTrendingDownIcon,
   BanknotesIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-
-const INCOME_SOURCES = [
-  { id: "venta", label: "Venta" },
-  { id: "orden", label: "Orden" },
-  { id: "proveedor", label: "Proveedor / Reembolso" },
-  { id: "otro", label: "Otro" },
-];
-
-const EXPENSE_SOURCES = [
-  { id: "proveedor", label: "Proveedor" },
-  { id: "orden", label: "Orden / Gasto" },
-  { id: "inventario", label: "Inventario" },
-  { id: "operativo", label: "Gasto operativo" },
-  { id: "otro", label: "Otro" },
-];
 
 export default function TransactionsPage() {
   const { selectedOrgId } = useOrganization();

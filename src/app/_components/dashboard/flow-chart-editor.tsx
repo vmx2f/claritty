@@ -35,18 +35,17 @@ import {
     XMarkIcon,
     PencilIcon
 } from '@heroicons/react/24/outline';
+import { FLOW_HANDLE_STYLE } from '@/app/_constants/flow-chart';
 
 // --- Custom Node Components ---
 
 // Common styles for handles
-const handleStyle = { width: 10, height: 10, backgroundColor: 'var(--primary-text)' };
-
 const GenericHandle = ({ type, position, id }: { type: 'source' | 'target', position: Position, id?: string }) => (
     <Handle
         type={type}
         position={position}
         id={id || `${type}-${position}`}
-        style={handleStyle}
+        style={FLOW_HANDLE_STYLE}
         // Handles are hidden by default and shown on hover ("group-hover") of the node
         className="!border-2 !border-main opacity-0 group-hover:opacity-100 transition-opacity duration-200"
     />

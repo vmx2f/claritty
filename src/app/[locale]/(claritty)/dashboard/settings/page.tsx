@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../../../convex/_generated/api";
 import { useOrganization } from "../../../../../contexts/OrganizationContext";
@@ -21,17 +21,8 @@ import {
   UserGroupIcon,
   ArrowPathIcon,
 } from "@heroicons/react/24/outline";
-
-const AREAS = [
-  { id: "reports", name: "Reports" },
-  { id: "orders", name: "Orders" },
-  { id: "transactions", name: "Ingresos y Salidas" },
-  { id: "products", name: "Products" },
-  { id: "clients", name: "Clients" },
-  { id: "flowchart", name: "Flow Chart" },
-  { id: "notifications", name: "Notifications" },
-  { id: "settings", name: "Settings" },
-];
+import { SETTINGS_AREAS } from "@/app/_constants/settings";
+import { BlockSettings } from "@/app/_components/settings/block-settings";
 
 type Tab = "organization" | "members";
 
@@ -111,7 +102,7 @@ function OrganizationSection({ selectedOrgId }: { selectedOrgId: Id<"organizatio
     selectedOrgId && organizations
       ? {
           storageId:
-            organizations.find((o) => o._id === selectedOrgId)?.imageStorageId ??
+            organizations.find((o) => o != null && o._id === selectedOrgId)?.imageStorageId ??
             null,
         }
       : "skip"
@@ -119,7 +110,7 @@ function OrganizationSection({ selectedOrgId }: { selectedOrgId: Id<"organizatio
   const updateOrg = useMutation(api.organizations.updateOrganization);
   const generateUploadUrl = useMutation(api.organizations.generateUploadUrl);
 
-  const org = organizations?.find((o) => o._id === selectedOrgId);
+  const org = organizations?.find((o) => o != null && o._id === selectedOrgId);
   if (org && !synced) {
     setName(org.name);
     setDescription(org.description ?? "");
@@ -165,8 +156,9 @@ function OrganizationSection({ selectedOrgId }: { selectedOrgId: Id<"organizatio
   };
 
   return (
-    <div className="bg-card border border-border rounded-xl p-8 max-w-2xl">
-      <div className="flex flex-col sm:flex-row gap-8">
+    <div className="space-y-4 max-w-5xl">
+      <div className="bg-card border border-border rounded-xl p-8">
+        <div className="flex flex-col sm:flex-row gap-8">
         <div className="flex-shrink-0">
           <div className="relative group">
             <div className="w-32 h-32 rounded-xl bg-main border border-border overflow-hidden flex items-center justify-center">
@@ -242,6 +234,19 @@ function OrganizationSection({ selectedOrgId }: { selectedOrgId: Id<"organizatio
             </div>
           )}
         </div>
+      </div>
+      </div>
+
+      <div className="bg-card border border-border rounded-xl p-6">
+        <h3 className="text-lg font-semibold text-primary-text mb-3">Block System</h3>
+        <p className="text-sm text-secondary-text mb-4">
+          Toggle business modules for this organization. Data is preserved when blocks are disabled.
+        </p>
+        <BlockSettings
+          organizationId={selectedOrgId}
+          currentConfig={org?.blockConfig}
+          canManage={org?.userRole === "owner"}
+        />
       </div>
     </div>
   );
@@ -527,7 +532,9 @@ function MembersSection({ selectedOrgId }: { selectedOrgId: Id<"organizations"> 
                 <label className="block text-sm font-medium text-primary-text mb-1">Role</label>
                 <select
                   value={inviteRole}
-                  onChange={(e) => setInviteRole(e.target.value as any)}
+                  onChange={(e) =>
+                    setInviteRole(e.target.value as "admin" | "member" | "viewer")
+                  }
                   className="w-full bg-main border border-border rounded-lg px-4 py-2 text-primary-text"
                 >
                   <option value="admin">Admin</option>
@@ -554,7 +561,7 @@ function MembersSection({ selectedOrgId }: { selectedOrgId: Id<"organizations"> 
                 <div>
                   <label className="block text-sm font-medium text-primary-text mb-2">Permissions</label>
                   <div className="grid grid-cols-2 gap-2">
-                    {AREAS.map((a) => (
+                    {SETTINGS_AREAS.map((a) => (
                       <label key={a.id} className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
@@ -616,7 +623,7 @@ function MembersSection({ selectedOrgId }: { selectedOrgId: Id<"organizations"> 
               <div>
                 <label className="block text-sm font-medium text-primary-text mb-2">Permissions</label>
                 <div className="grid grid-cols-2 gap-2">
-                  {AREAS.map((a) => (
+                  {SETTINGS_AREAS.map((a) => (
                     <label key={a.id} className="flex items-center gap-2 cursor-pointer">
                       <input
                         type="checkbox"

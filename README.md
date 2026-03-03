@@ -1,5 +1,5 @@
 # Next database project template
-This template contains configuration with good practices for a project with auth, database, internationalization, type safety, using Bun as package manager:
+This template contains configuration with good practices for a project with auth, database, internationalization, type safety, using Bun Package manager as package manager:
 ## Project structure
 
 ```

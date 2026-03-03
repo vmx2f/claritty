@@ -1,109 +1,109 @@
-@import "tailwindcss";
+  @import "tailwindcss";
 
-:root {
-  --accent-color: #8CA9FF;
-  --background-main: #f5f0df;
-  --primary-text: #333333;
-  --secondary-text: #555555;
-  --hover-color: #F9F8F6;
-  --hover-text: #3b3b3b;
-  --subtle-color: #333;
-  --card-color: #dddddd;
-  --success-color: #10B981;
-  --warning-color: #F59E0B;
-  --error-color: #EF4444;
-  --info-color: #3B82F6;
-  --border-color: #E5E7EB;
-  --shadow-color: #0000001a;
-}
+  :root {
+    --accent-color: #111111;
+    --background-main: #f7f7f7;
+    --primary-text: #111111;
+    --secondary-text: #4a4a4a;
+    --hover-color: #ececec;
+    --hover-text: #000000;
+    --subtle-color: #5a5a5a;
+    --card-color: #ffffff;
+    --success-color: #0f0f0f;
+    --warning-color: #202020;
+    --error-color: #000000;
+    --info-color: #1a1a1a;
+    --border-color: #d7d7d7;
+    --shadow-color: #00000020;
+  }
 
-.dark {
-  --accent-color: #8CA9FF;
-  --background-main: #0a0a0a;
-  --primary-text: #ededed;
-  --secondary-text: #aaaaaa;
-  --hover-color: #161616;
-  --hover-text: #c7c7c7;
-  --subtle-color: #333;
-  --card-color: #151515;
-  --success-color: #059669;
-  --warning-color: #D97706;
-  --error-color: #DC2626;
-  --info-color: #0284C7;
-  --border-color: #374151;
-  --shadow-color: #ffffff1a;
-}
+  .dark {
+    --accent-color: #f4f4f4;
+    --background-main: #0a0a0a;
+    --primary-text: #f2f2f2;
+    --secondary-text: #b5b5b5;
+    --hover-color: #161616;
+    --hover-text: #ffffff;
+    --subtle-color: #8a8a8a;
+    --card-color: #121212;
+    --success-color: #e5e5e5;
+    --warning-color: #d9d9d9;
+    --error-color: #ffffff;
+    --info-color: #cfcfcf;
+    --border-color: #2a2a2a;
+    --shadow-color: #00000066;
+  }
 
-@theme {
-  --color-accent-color: var(--accent-color);
-  --color-main: var(--background-main);
-  --color-primary-text: var(--primary-text);
-  --color-secondary-text: var(--secondary-text);
-  --color-hover: var(--hover-color);
-  --color-text-hover: var(--hover-text);
-  --color-subtle: var(--subtle-color);
-  --color-card: var(--card-color);
-  --color-success: var(--success-color);
-  --color-warning: var(--warning-color);
-  --color-error: var(--error-color);
-  --color-info: var(--info-color);
-  --color-border: var(--border-color);
-  --color-shadow: var(--shadow-color);
-}
+  @theme {
+    --color-accent-color: var(--accent-color);
+    --color-main: var(--background-main);
+    --color-primary-text: var(--primary-text);
+    --color-secondary-text: var(--secondary-text);
+    --color-hover: var(--hover-color);
+    --color-text-hover: var(--hover-text);
+    --color-subtle: var(--subtle-color);
+    --color-card: var(--card-color);
+    --color-success: var(--success-color);
+    --color-warning: var(--warning-color);
+    --color-error: var(--error-color);
+    --color-info: var(--info-color);
+    --color-border: var(--border-color);
+    --color-shadow: var(--shadow-color);
+  }
 
-@layer base {
-  body {
-    @apply transition duration-300 bg-main text-primary-text;
-  }
-  button {
-    @apply transition-colors duration-100 bg-primary-text text-main px-5 py-2 rounded-full hover:bg-text-hover;
-  }
-} 
+  @layer base {
+    body {
+      @apply transition duration-300 bg-main text-primary-text;
+    }
+    button {
+      @apply transition-colors duration-100 bg-primary-text text-main px-5 py-2 rounded-full hover:bg-text-hover;
+    }
+  } 
 
-@layer components {
-  .btn-border {
-    @apply border bg-transparent text-primary-text border-solid hover:bg-hover;
+  @layer components {
+    .btn-border {
+      @apply border bg-transparent text-primary-text border-solid hover:bg-hover;
+    }
+    .select-border {
+      @apply border bg-transparent text-primary-text px-3 py-2 rounded-full border-solid hover:bg-hover;
+    }
+    .text-success {
+      color: var(--color-success);
+    }
+    .text-warning {
+      color: var(--color-warning);
+    }
+    .text-error {
+      color: var(--color-error);
+    }
+    .text-info {
+      color: var(--color-info);
+    }
+    .bg-success {
+      background-color: var(--color-success);
+    }
+    .bg-warning {
+      background-color: var(--color-warning);
+    }
+    .bg-error {
+      background-color: var(--color-error);
+    }
+    .bg-info {
+      background-color: var(--color-info);
+    }
+    .border-success {
+      border-color: var(--color-success);
+    }
+    .border-warning {
+      border-color: var(--color-warning);
+    }
+    .border-error {
+      border-color: var(--color-error);
+    }
+    .border-info {
+      border-color: var(--color-info);
+    }
+    .shadow-custom {
+      box-shadow: 0 4px 6px -1px var(--color-shadow);
+    }
   }
-  .select-border {
-    @apply border bg-transparent text-primary-text px-3 py-2 rounded-full border-solid hover:bg-hover;
-  }
-  .text-success {
-    color: var(--color-success);
-  }
-  .text-warning {
-    color: var(--color-warning);
-  }
-  .text-error {
-    color: var(--color-error);
-  }
-  .text-info {
-    color: var(--color-info);
-  }
-  .bg-success {
-    background-color: var(--color-success);
-  }
-  .bg-warning {
-    background-color: var(--color-warning);
-  }
-  .bg-error {
-    background-color: var(--color-error);
-  }
-  .bg-info {
-    background-color: var(--color-info);
-  }
-  .border-success {
-    border-color: var(--color-success);
-  }
-  .border-warning {
-    border-color: var(--color-warning);
-  }
-  .border-error {
-    border-color: var(--color-error);
-  }
-  .border-info {
-    border-color: var(--color-info);
-  }
-  .shadow-custom {
-    box-shadow: 0 4px 6px -1px var(--color-shadow);
-  }
-}
