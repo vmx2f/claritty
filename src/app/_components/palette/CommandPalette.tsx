@@ -43,7 +43,21 @@ export function CommandPalette() {
     setActiveIndex(0);
   };
 
+  const listingRoutes: Partial<Record<ActionDefinition["id"], string>> = {
+    "list-products": "/dashboard/products",
+    "list-clients": "/dashboard/clients",
+    "list-orders": "/dashboard/orders",
+    "list-incomes": "/dashboard/transactions",
+    "list-outputs": "/dashboard/transactions",
+  };
+
   const executeFallbackAction = async (action: ActionDefinition) => {
+    const route = listingRoutes[action.id];
+    if (route) {
+      router.push(route);
+      return;
+    }
+
     if (action.id === "view-logs") {
       router.push("/dashboard/chat");
       return;

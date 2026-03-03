@@ -40,6 +40,30 @@ export const getClients = query({
   },
 });
 
+export const getAllByOrg = query({
+  args: {
+    orgId: v.id("organizations"),
+    from: v.optional(v.number()),
+    to: v.optional(v.number()),
+  },
+  returns: v.array(v.any()),
+  handler: async (ctx, args) => {
+    let clients = await ctx.db
+      .query("clients")
+      .withIndex("by_orgId", (q) => q.eq("orgId", args.orgId))
+      .collect();
+
+    if (args.from !== undefined) {
+      clients = clients.filter((client) => client.createdAt >= args.from!);
+    }
+    if (args.to !== undefined) {
+      clients = clients.filter((client) => client.createdAt <= args.to!);
+    }
+
+    return clients;
+  },
+});
+
 export const updateClient = mutation({
   args: {
     clientId: v.id("clients"),

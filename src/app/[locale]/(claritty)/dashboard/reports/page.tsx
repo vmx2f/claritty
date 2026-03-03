@@ -1,9 +1,11 @@
 "use client";
 
+import type { ComponentType } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../../../../convex/_generated/api";
 import { useOrganization } from "../../../../../contexts/OrganizationContext";
 import { formatCurrency } from "../../../../../lib/currency";
+import { ExportControls } from "@/app/_components/export/export-controls";
 import {
   ChartBarIcon,
   ShoppingCartIcon,
@@ -15,7 +17,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 export default function ReportsPage() {
-  const { selectedOrgId } = useOrganization();
+  const { selectedOrgId, activeBlocks } = useOrganization();
   const report = useQuery(
     api.reports.getDashboardReport,
     selectedOrgId ? { orgId: selectedOrgId } : "skip"
@@ -47,6 +49,8 @@ export default function ReportsPage() {
           Overview and analytics for your organization (Peruvian Soles - S/)
         </p>
       </div>
+
+      <ExportControls orgId={selectedOrgId} activeBlocks={activeBlocks} />
 
       {!report ? (
         <div className="animate-pulse space-y-6">
@@ -175,7 +179,7 @@ function StatCard({
 }: {
   title: string;
   value: string;
-  icon: any;
+  icon: ComponentType<{ className?: string }>;
   variant?: "default" | "primary" | "success" | "warning" | "error";
 }) {
   const variantClasses = {

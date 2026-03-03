@@ -5,6 +5,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { ChatInput } from "@/app/_components/chat/ChatInput";
 import { ChatThread } from "@/app/_components/chat/ChatThread";
+import { useRouter } from "@/i18n/navigation";
 import { useActionResolver } from "@/hooks/useActionResolver";
 import { useServiceLayer } from "@/hooks/useServiceLayer";
 import { useOrganization } from "@/contexts/OrganizationContext";
@@ -13,6 +14,7 @@ import { useChatStore } from "@/store/chatStore";
 import { useLogStore } from "@/store/logStore";
 
 export function ChatPage() {
+  const router = useRouter();
   const { selectedOrgId, activeBlocks } = useOrganization();
   const { logService } = useServiceLayer();
   const logs = useQuery(api.logs.list, selectedOrgId ? { orgId: selectedOrgId, limit: 250 } : { limit: 250 });
@@ -26,6 +28,14 @@ export function ChatPage() {
   const setActiveActionId = useChatStore((state) => state.setActiveActionId);
 
   const suggestions = useActionResolver(query, 6, activeBlocks);
+
+  const listingRoutes: Partial<Record<ActionDefinition["id"], string>> = {
+    "list-products": "/dashboard/products",
+    "list-clients": "/dashboard/clients",
+    "list-orders": "/dashboard/orders",
+    "list-incomes": "/dashboard/transactions",
+    "list-outputs": "/dashboard/transactions",
+  };
 
   useEffect(() => {
     if (!logs) {
@@ -49,6 +59,13 @@ export function ChatPage() {
 
   const handleSelectAction = async (action: ActionDefinition) => {
     setQuery(action.label.toLowerCase());
+    const route = listingRoutes[action.id];
+    if (route) {
+      router.push(route);
+      setQuery("");
+      return;
+    }
+
     if (action.formId) {
       setActiveActionId(action.formId);
       await logService.record({
@@ -97,7 +114,12 @@ export function ChatPage() {
           setQuery("");
         }}
       />
-      <ChatInput value={query} onChange={setQuery} suggestions={suggestions} onSelectAction={handleSelectAction} />
+      <ChatInput
+        value={query}
+        onChange={setQuery}
+        suggestions={suggestions}
+        onSelectAction={handleSelectAction}
+      />
     </section>
   );
 }

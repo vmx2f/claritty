@@ -37,6 +37,30 @@ export const getOrders = query({
   },
 });
 
+export const getAllByOrg = query({
+  args: {
+    orgId: v.id("organizations"),
+    from: v.optional(v.number()),
+    to: v.optional(v.number()),
+  },
+  returns: v.array(v.any()),
+  handler: async (ctx, args) => {
+    let orders = await ctx.db
+      .query("orders")
+      .withIndex("by_orgId", (q) => q.eq("orgId", args.orgId))
+      .collect();
+
+    if (args.from !== undefined) {
+      orders = orders.filter((order) => order.createdAt >= args.from!);
+    }
+    if (args.to !== undefined) {
+      orders = orders.filter((order) => order.createdAt <= args.to!);
+    }
+
+    return orders;
+  },
+});
+
 export const updateOrderStatus = mutation({
   args: {
     orderId: v.id("orders"),
@@ -52,7 +76,11 @@ export const updateOrderStatus = mutation({
     const order = await ctx.db.get(orderId);
     if (!order) throw new Error("Order not found");
 
-    const updateData: any = { status };
+    const updateData: {
+      status: "pending" | "paid" | "shipped" | "cancelled";
+      paidAt?: number;
+      shippedAt?: number;
+    } = { status };
 
     if (status === "paid") {
       updateData.paidAt = Date.now();

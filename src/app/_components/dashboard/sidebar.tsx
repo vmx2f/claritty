@@ -272,6 +272,13 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                     <ThemeSwitch />
                     <LanguageToggle />
                   </div>
+                  <Link
+                    href="/dashboard/user-settings"
+                    onClick={() => setIsDropdownOpen(false)}
+                    className="block w-full text-left px-3 py-2 text-xs text-primary-text hover:bg-hover transition-colors bg-primary-text/10"
+                  >
+                    User Settings
+                  </Link>
                   <button
                     onClick={handleSignOut}
                     className="w-full text-left px-3 py-2 text-xs text-error hover:bg-error/10 transition-colors bg-primary-text/10"

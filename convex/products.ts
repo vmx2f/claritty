@@ -31,6 +31,30 @@ export const getProducts = query({
   },
 });
 
+export const getAllByOrg = query({
+  args: {
+    orgId: v.id("organizations"),
+    from: v.optional(v.number()),
+    to: v.optional(v.number()),
+  },
+  returns: v.array(v.any()),
+  handler: async (ctx, args) => {
+    let products = await ctx.db
+      .query("products")
+      .withIndex("by_orgId", (q) => q.eq("orgId", args.orgId))
+      .collect();
+
+    if (args.from !== undefined) {
+      products = products.filter((product) => product.createdAt >= args.from!);
+    }
+    if (args.to !== undefined) {
+      products = products.filter((product) => product.createdAt <= args.to!);
+    }
+
+    return products;
+  },
+});
+
 export const updateProduct = mutation({
   args: {
     productId: v.id("products"),
