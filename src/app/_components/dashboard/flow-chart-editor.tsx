@@ -286,7 +286,7 @@ const ToolboxItem = ({ type, label, icon: Icon, disabled }: { type: string, labe
 
 function FlowChart() {
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-    const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+    const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([] as Edge[]);
     const [menu, setMenu] = useState<{ id: string, type: string, top?: number, left?: number, right?: number, bottom?: number } | null>(null);
     const [editingNode, setEditingNode] = useState<{ id: string, label: string } | null>(null);
     const ref = useRef<HTMLDivElement>(null);

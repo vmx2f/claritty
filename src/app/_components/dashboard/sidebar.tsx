@@ -5,7 +5,6 @@ import { Link, usePathname } from "@/i18n/navigation";
 import {
   BuildingOfficeIcon,
   ChevronDownIcon,
-  ChevronLeftIcon,
   UserCircleIcon,
   PlusIcon,
   CheckIcon,
@@ -127,31 +126,24 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
             <div className="relative flex items-center gap-1">
               <button
                 onClick={() => setIsOrgDropdownOpen(!isOrgDropdownOpen)}
-                className="flex-1 min-w-0 flex items-center gap-2 p-1.5 hover:bg-hover rounded-lg transition-colors group text-left bg-primary-text/10"
+                className="flex-1 min-w-0 flex items-center gap-2 p-1.5 hover:bg-hover rounded-lg transition-colors group text-left bg-main/10"
               >
                 <div className="w-7 h-7 rounded-lg bg-primary-text/80 flex items-center justify-center shrink-0 overflow-hidden">
                   {orgImageUrl ? (
                     <img src={orgImageUrl} alt="" className="w-full h-full object-cover" />
                   ) : (
-                    <BuildingOfficeIcon className="w-3.5 h-3.5 text-white" />
+                    <BuildingOfficeIcon className="w-3.5 h-3.5 text-primary-text" />
                   )}
                 </div>
                 <div className="flex-1 min-w-0 text-left">
                   <p className="text-[11px] font-semibold text-primary-text truncate">
-                    {selectedOrg?.name || "Select Org"}
+                    {selectedOrg?.name    || "Select Org"}
                   </p>
                   <p className="text-[9px] text-secondary-text truncate">
                     {selectedOrg?.userRole || ""}
                   </p>
                 </div>
                 <ChevronDownIcon className={`w-3.5 h-3.5 text-secondary-text transition-transform shrink-0 ${isOrgDropdownOpen ? "rotate-180" : ""}`} />
-              </button>
-              <button
-                onClick={onToggle}
-                className="p-1 shrink-0 hover:bg-hover rounded-lg transition-colors text-secondary-text hover:text-primary-text bg-primary-text/10"
-                title="Collapse sidebar"
-              >
-                <ChevronLeftIcon className="w-3.5 h-3.5" />
               </button>
 
               {isOrgDropdownOpen && (
@@ -165,7 +157,7 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                             setSelectedOrgId(org._id);
                             setIsOrgDropdownOpen(false);
                           }}
-                          className={`w-full text-left px-3 py-2 text-sm hover:bg-hover transition-colors flex items-center justify-between ${selectedOrgId === org._id ? "bg-primary-text/10 dark:bg-primary-text/20" : ""
+                          className={`w-full rounded-none text-left px-3 py-2 text-sm hover:bg-hover transition-colors flex items-center justify-between ${selectedOrgId === org._id ? "bg-primary-text/10" : "bg-primary-text/20"
                             }`}
                         >
                           <div className="flex-1 min-w-0">
@@ -185,7 +177,7 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                         setShowCreateOrgModal(true);
                         setIsOrgDropdownOpen(false);
                       }}
-                      className="w-full text-left px-3 py-2 text-xs text-primary-text font-medium hover:bg-primary-text/10 transition-colors flex items-center gap-2"
+                      className="w-full rounded-none text-left px-3 py-2 text-xs text-background/90 font-medium hover:bg-primary-text/10 transition-colors flex items-center gap-2"
                     >
                       <PlusIcon className="w-4 h-4" />
                       New Organization

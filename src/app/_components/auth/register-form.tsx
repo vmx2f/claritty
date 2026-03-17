@@ -13,7 +13,7 @@ export function RegisterForm() {
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const t = useExtracted('auth');
+  const t = useExtracted("auth");
 
   // More permissive password validation checks
   const passwordChecks = {
@@ -21,13 +21,13 @@ export function RegisterForm() {
     hasLetter: /[a-zA-Z]/.test(password),
   };
 
-  const isPasswordValid = Object.values(passwordChecks).every(check => check);
+  const isPasswordValid = Object.values(passwordChecks).every((check) => check);
 
   const getPasswordStrength = () => {
     const passedChecks = Object.values(passwordChecks).filter(Boolean).length;
-    if (passedChecks === 1) return { text: 'Fair', color: 'text-yellow-500' };
-    if (passedChecks === 2) return { text: 'Good', color: 'text-green-500' };
-    return { text: 'Weak', color: 'text-red-500' };
+    if (passedChecks === 1) return { text: "Fair", color: "text-yellow-500" };
+    if (passedChecks === 2) return { text: "Good", color: "text-green-500" };
+    return { text: "Weak", color: "text-red-500" };
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -60,22 +60,24 @@ export function RegisterForm() {
   return (
     <div className="text-sm w-full mx-auto p-6 rounded-xl bg-card/50 border border-subtle drop-shadow-sm">
       <h2 className="font-bold mb-2">{t("Create your account")}</h2>
-      <p className="text-primary-text/50  mb-5">{t("Enter your information below to create your account")}</p>
+      <p className="text-primary-text/50  mb-5">
+        {t("Enter your information below to create your account")}
+      </p>
       <div className="flex flex-col gap-3 mb-4">
         <button className="text-primary-text  w-full px-3 py-2 border border-subtle rounded-lg focus:outline-none transition-all duration-300 focus:ring-3 focus:ring-subtle/90 bg-card hover:bg-subtle/80">
-          {t('Sign up with Google')}
+          {t("Sign up with Google")}
         </button>
         <button className="text-primary-text  w-full px-3 py-2 border border-subtle rounded-lg focus:outline-none transition-all duration-300 focus:ring-3 focus:ring-subtle/90 bg-card hover:bg-subtle/80">
-          {t('Sign up with Apple')}
+          {t("Sign up with Apple")}
         </button>
         <button className="text-primary-text  w-full px-3 py-2 border border-subtle rounded-lg focus:outline-none transition-all duration-300 focus:ring-3 focus:ring-subtle/90 bg-card hover:bg-subtle/80">
-          {t('Sign up with Facebook')}
+          {t("Sign up with Facebook")}
         </button>
       </div>
       <div className="flex items-center gap-4 mb-5">
         <div className="flex-1 border-t border-neutral-700"></div>
         <span className=" text-neutral-400 whitespace-nowrap">
-          Or continue with
+          {t("Or continue with")}
         </span>
         <div className="flex-1 border-t border-neutral-700"></div>
       </div>
@@ -83,7 +85,7 @@ export function RegisterForm() {
       <form onSubmit={handleRegister} className="space-y-4">
         <div>
           <label htmlFor="name" className="block  font-medium mb-2">
-            {t('Name')}
+            {t("Name")}
           </label>
           <input
             id="name"
@@ -98,7 +100,7 @@ export function RegisterForm() {
 
         <div>
           <label htmlFor="email" className="block  font-medium mb-2">
-            {t('Email')}
+            {t("Email")}
           </label>
           <input
             id="email"
@@ -113,7 +115,7 @@ export function RegisterForm() {
 
         <div>
           <label htmlFor="password" className="block  font-medium mb-2">
-            {t('Password')}
+            {t("Password")}
           </label>
           <div className="relative">
             <input
@@ -137,22 +139,27 @@ export function RegisterForm() {
               )}
             </button>
           </div>
-          
+
           {/* Simplified password requirements */}
           <div className="mt-3">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs text-subtle">Password strength:</span>
-              <span className={`text-xs font-medium ${password ? getPasswordStrength().color : 'text-gray-400'}`}>
-                {password ? getPasswordStrength().text : 'Enter password'}
+              <span
+                className={`text-xs font-medium ${password ? getPasswordStrength().color : "text-gray-400"}`}
+              >
+                {password ? getPasswordStrength().text : "Enter password"}
               </span>
             </div>
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-              <div 
+              <div
                 className={`h-2 rounded-full transition-all duration-300 ${
-                  !password ? 'bg-gray-300 dark:bg-gray-600 w-0' :
-                  getPasswordStrength().text === 'Weak' ? 'bg-red-500 w-1/3' :
-                  getPasswordStrength().text === 'Fair' ? 'bg-yellow-500 w-2/3' :
-                  'bg-green-500 w-full'
+                  !password
+                    ? "bg-gray-300 dark:bg-gray-600 w-0"
+                    : getPasswordStrength().text === "Weak"
+                      ? "bg-red-500 w-1/3"
+                      : getPasswordStrength().text === "Fair"
+                        ? "bg-yellow-500 w-2/3"
+                        : "bg-green-500 w-full"
                 }`}
               />
             </div>
@@ -160,18 +167,26 @@ export function RegisterForm() {
               <p className="text-xs text-subtle mb-2">Password must contain:</p>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className={`text-xs ${passwordChecks.minLength ? 'text-success' : 'text-gray-400'}`}>
-                    {passwordChecks.minLength ? '✓' : '○'}
+                  <span
+                    className={`text-xs ${passwordChecks.minLength ? "text-success" : "text-gray-400"}`}
+                  >
+                    {passwordChecks.minLength ? "✓" : "○"}
                   </span>
-                  <span className={`text-xs ${passwordChecks.minLength ? 'text-success' : 'text-gray-400'}`}>
+                  <span
+                    className={`text-xs ${passwordChecks.minLength ? "text-success" : "text-gray-400"}`}
+                  >
                     At least 6 characters
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className={`text-xs ${passwordChecks.hasLetter ? 'text-success' : 'text-gray-400'}`}>
-                    {passwordChecks.hasLetter ? '✓' : '○'}
+                  <span
+                    className={`text-xs ${passwordChecks.hasLetter ? "text-success" : "text-gray-400"}`}
+                  >
+                    {passwordChecks.hasLetter ? "✓" : "○"}
                   </span>
-                  <span className={`text-xs ${passwordChecks.hasLetter ? 'text-success' : 'text-gray-400'}`}>
+                  <span
+                    className={`text-xs ${passwordChecks.hasLetter ? "text-success" : "text-gray-400"}`}
+                  >
                     At least one letter
                   </span>
                 </div>
@@ -180,23 +195,24 @@ export function RegisterForm() {
           </div>
         </div>
 
-        {error && (
-          <div className="text-error">{error}</div>
-        )}
+        {error && <div className="text-error">{error}</div>}
 
         <button
           type="submit"
           disabled={isLoading || !isPasswordValid}
           className="w-full  py-2 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isLoading ? t('Creating account...') : t('Create account')}
+          {isLoading ? t("Creating account...") : t("Create account")}
         </button>
         <div className="flex justify-center text-primary-text/80">
           <label htmlFor="password" className=" mb-2 pr-1">
             {t(`Already have an account?`)}
           </label>
-          <Link href={'/login'} className=" text-left underline mb-2 hover:text-primary-text">
-            {t('Sign in')}
+          <Link
+            href={"/login"}
+            className=" text-left underline mb-2 hover:text-primary-text"
+          >
+            {t("Sign in")}
           </Link>
         </div>
       </form>

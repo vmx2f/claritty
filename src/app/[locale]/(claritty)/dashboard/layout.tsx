@@ -86,7 +86,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           />
         )}
         <div className="flex-1 flex flex-col min-w-0">
-          <TopBar />
+          <TopBar 
+            isSidebarCollapsed={isSidebarCollapsed}
+            onToggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+          />
           <main className={`flex-1 overflow-auto ${isMobile ? "pb-20" : ""}`}>
             {children}
           </main>

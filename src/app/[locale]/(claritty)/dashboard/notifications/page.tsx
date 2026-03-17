@@ -31,7 +31,7 @@ export default function NotificationsPage() {
     }, []);
 
     // Queries
-    const notifications = useQuery(api.notifications.getUserNotifications);
+    const notifications = useQuery(api.notifications.getUserNotifications, {});
     const myInvitations = useQuery(api.members.getMyInvitations, userEmail ? { email: userEmail } : "skip");
 
     // Mutations
