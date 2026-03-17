@@ -157,14 +157,15 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                             setSelectedOrgId(org._id);
                             setIsOrgDropdownOpen(false);
                           }}
-                          className={`w-full rounded-none text-left px-3 py-2 text-sm hover:bg-hover transition-colors flex items-center justify-between ${selectedOrgId === org._id ? "bg-primary-text/10" : "bg-primary-text/20"
+                          className={`w-full rounded-none text-left px-2 py-2 text-sm hover:bg-primary-text/10 transition-colors flex items-center justify-between ${selectedOrgId === org._id ? "bg-primary-text/10" : "bg-main/10"
                             }`}
                         >
-                          <div className="flex-1 min-w-0">
+                          <div className="flex gap-1">
+                            {selectedOrgId === org._id && <CheckIcon className="w-3 text-primary-text shrink-0" />}
                             <p className="text-xs font-medium text-primary-text truncate">{org.name}</p>
-                            <p className="text-[10px] text-secondary-text">{org.userRole}</p>
                           </div>
-                          {selectedOrgId === org._id && <CheckIcon className="w-4 h-4 text-primary-text shrink-0" />}
+                          <p className="text-[10px] text-secondary-text">{org.userRole}</p>
+                          
                         </button>
                       ))
                     ) : (
@@ -177,7 +178,7 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                         setShowCreateOrgModal(true);
                         setIsOrgDropdownOpen(false);
                       }}
-                      className="w-full rounded-none text-left px-3 py-2 text-xs text-background/90 font-medium hover:bg-primary-text/10 transition-colors flex items-center gap-2"
+                      className="w-full rounded-none text-left px-3 py-2 text-xs font-medium bg-main/10 text-primary-text transition-colors flex items-center gap-1 hover:bg-primary-text/10"
                     >
                       <PlusIcon className="w-4 h-4" />
                       New Organization

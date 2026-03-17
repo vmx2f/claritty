@@ -6,7 +6,6 @@ import { useRouter, usePathname } from "next/navigation";
 import Sidebar from "@/app/_components/dashboard/sidebar";
 import TopBar from "@/app/_components/dashboard/top-bar";
 import BottomNav from "@/app/_components/dashboard/bottom-nav";
-import CommandPalette from "@/app/_components/dashboard/command-palette";
 import { OrganizationProvider } from "@/contexts/OrganizationContext";
 import { useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
@@ -96,7 +95,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {/* Bottom nav: mobile only */}
           {isMobile && <BottomNav />}
         </div>
-        <CommandPalette />
       </section>
     </OrganizationProvider>
   );

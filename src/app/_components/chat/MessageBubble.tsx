@@ -12,12 +12,12 @@ export function MessageBubble({ entry }: MessageBubbleProps) {
   const Icon = config.icon;
 
   return (
-    <div className={`max-w-[80%] rounded-xl px-3 py-2 text-sm flex justify-between`}>
+    <div className={`px-3 py-1 text-sm flex justify-between`}>
       <div className="flex gap-2">
         <Icon className={`h-4 w-4 ${config.color}`} />
         <p>{entry.message}</p>
       </div>
-      <p className="mt-1 text-[11px] opacity-70">{new Date(entry.createdAt).toLocaleString()}</p>
+      <p className="text-[11px] opacity-70">{new Date(entry.createdAt).toLocaleString()}</p>
     </div>
   );
 }

@@ -7,6 +7,8 @@ import { isNavItemActive } from "@/blocks/runtime";
 import { getSidebarNavItems } from "@/constants/navigation";
 import { useOrganization } from "@/contexts/OrganizationContext";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import { CommandPalette } from "../palette/CommandPalette";
+
 
 interface TopBarProps {
   isSidebarCollapsed?: boolean;
@@ -53,6 +55,7 @@ export default function TopBar(props: TopBarProps) {
           <span className="mx-2 text-sm text-secondary-text">/</span>
           <p className="text-sm font-medium text-primary-text truncate">{pageName}</p>
         </div>
+        <CommandPalette />
       </div>
     </header>
   );

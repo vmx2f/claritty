@@ -95,24 +95,24 @@ export function CommandPalette() {
     return (
       <button
         onClick={() => useChatStore.getState().open()}
-        className="fixed right-4 top-4 z-30 hidden items-center gap-2 rounded-full border border-border bg-card/85 px-3 py-2 text-xs text-secondary-text shadow-lg backdrop-blur-sm md:flex"
+        className="hidden items-center gap-2 rounded-full border border-border bg-card/85 px-3 py-2 text-xs text-secondary-text shadow-lg backdrop-blur-sm md:flex"
         type="button"
       >
         <ChatBubbleBottomCenterTextIcon className="h-4 w-4" />
         Command Menu
-        <span className="rounded-md border border-border px-1.5 py-0.5 text-[10px] text-primary-text">Ctrl+K</span>
+        <span className="rounded-md border border-border text-[10px] text-primary-text">Ctrl+K</span>
       </button>
     );
   }
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center bg-black/30 p-4 pt-[12vh] backdrop-blur-md"
+      className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-[12vh] backdrop-blur-md"
       onClick={clearAndClose}
       role="presentation"
     >
       <div
-        className="w-full max-w-2xl overflow-hidden rounded-2xl border border-border bg-card/95 shadow-2xl"
+        className="w-full max-w-5xl overflow-hidden rounded-2xl border border-border bg-card/95 shadow-2xl"
         onClick={(event) => event.stopPropagation()}
         onKeyDown={async (event) => {
           if (event.key === "Escape") {
