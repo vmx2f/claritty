@@ -53,7 +53,7 @@
 
   @layer base {
     body {
-      @apply transition duration-300 bg-main text-primary-text;
+      @apply transition duration-100 bg-main text-primary-text;
     }
     button {
       @apply transition-colors duration-100 bg-primary-text text-main px-5 py-2 rounded-full hover:bg-text-hover;
@@ -61,11 +61,14 @@
   } 
 
   @layer components {
+    .btn {
+      @apply transition-colors duration-100 text-sm font-medium px-4 py-2 rounded-md bg-primary-text/10 hover:bg-primary-text/5 text-center;
+    }
+    .btn-reverse {
+      @apply bg-primary-text text-main hover:bg-primary-text/90;
+    }
     .btn-border {
       @apply border bg-transparent text-primary-text border-solid hover:bg-hover;
-    }
-    .select-border {
-      @apply border bg-transparent text-primary-text px-3 py-2 rounded-full border-solid hover:bg-hover;
     }
     .text-success {
       color: var(--color-success);

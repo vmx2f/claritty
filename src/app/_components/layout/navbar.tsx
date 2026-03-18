@@ -1,6 +1,5 @@
 'use client';
 
-import Link from "next/link";
 import { useExtracted } from "next-intl";
 import ThemeSwitch from "./theme-switch";
 import LanguageToggle from "../providers/language-toggle";
@@ -12,7 +11,7 @@ export default function Navbar() {
   const t = useExtracted("Navbar");
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 border-b border-gray-200">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-border">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 lg:px-8">
         
         {/* Logo */}

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-// import Navbar from "../../_components/layout/navbar";
+import Navbar from "../../_components/layout/navbar";
 import { getExtracted } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -43,9 +43,10 @@ type Props = {
   children: React.ReactNode;
 };
 
-export default function LandingLayout({ children }: Props) {
+export default function TestsLayout({ children }: Props) {
   return (
     <section>
+      <Navbar/>
         {children}
     </section>
   );

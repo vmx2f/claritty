@@ -8,3 +8,4 @@ export const SETTINGS_AREAS = [
   { id: "notifications", name: "Notifications" },
   { id: "settings", name: "Settings" },
 ] as const;
+1

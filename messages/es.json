@@ -1,46 +1,46 @@
 {
   "auth": {
-    "deEeEI": "Registrarse",
-    "odXlk8": "Iniciar sesión",
-    "25WwxF": "¿No tienes una cuenta?",
-    "3t2ZWR": "Inicia sesión en tu cuenta",
-    "5sg7KC": "Contraseña",
-    "8HJxXG": "Registrarse",
-    "AWVk03": "Iniciando sesión...",
-    "AyGauy": "Iniciar sesión",
-    "bbL6co": "Iniciar sesión con Facebook",
-    "cyRU1N": "¿Olvidaste tu contraseña?",
-    "hfuuOe": "Iniciar sesión con Google",
-    "HJo9Ji": "Ingresa tu información abajo para acceder a tu cuenta",
-    "MZCt8F": "Iniciar sesión con Apple",
-    "sy+pv5": "Correo electrónico",
+    "deEeEI": "",
+    "odXlk8": "",
+    "25WwxF": "",
+    "3t2ZWR": "",
+    "5sg7KC": "",
+    "8HJxXG": "",
+    "AWVk03": "",
+    "AyGauy": "",
+    "bbL6co": "",
+    "cyRU1N": "",
+    "hfuuOe": "",
+    "HJo9Ji": "",
+    "MZCt8F": "",
+    "sy+pv5": "",
     "4cSA+G": "",
-    "GgThsK": "Registrarse con Apple",
-    "HAlOn1": "Nombre",
-    "hC5cn7": "Ingresa tu información abajo para crear tu cuenta",
-    "huqKGl": "Crear cuenta",
-    "QJob30": "Registrarse con Facebook",
-    "SeO7GZ": "Crea tu cuenta",
-    "SQJto2": "Iniciar sesión",
-    "uCk8r+": "¿Ya tienes una cuenta?",
-    "v7Bl2J": "Creando cuenta...",
-    "wUCGLt": "Registrarse con Google"
+    "GgThsK": "",
+    "HAlOn1": "",
+    "hC5cn7": "",
+    "huqKGl": "",
+    "QJob30": "",
+    "SeO7GZ": "",
+    "SQJto2": "",
+    "uCk8r+": "",
+    "v7Bl2J": "",
+    "wUCGLt": ""
   },
   "navbar": {
-    "HCnHb1": "Enlace3",
-    "kLJz3l": "Enlace2",
-    "tSZp9o": "Inicio",
-    "UnHpzG": "Enlace1"
+    "HCnHb1": "",
+    "kLJz3l": "",
+    "tSZp9o": "",
+    "UnHpzG": ""
   },
   "metadata": {
-    "ejEGdx": "Inicio",
+    "ejEGdx": "",
     "keywords": {
-      "+gQvgd": "palabra-clave-1",
-      "+PoYfH": "palabra-clave-2"
+      "+gQvgd": "",
+      "+PoYfH": ""
     },
-    "OE94n1": "descripción",
-    "xl217p": "título",
-    "Xstf7k": "texto alternativo"
+    "OE94n1": "",
+    "xl217p": "",
+    "Xstf7k": ""
   },
   "JqYRWE": "",
   "Qf8ENv": "",
@@ -48,11 +48,14 @@
   "qzYtrp": "",
   "W6NpE9": "",
   "Home": {
+    "88zzPX": "",
+    "AyGauy": "",
+    "deEeEI": "",
+    "EemWC3": "",
+    "N5WoR+": "",
+    "6O/fGd": "",
     "bjEq9R": "",
     "fKkqoY": "",
-    "OStbnZ": "",
-    "p+zMvX": "",
-    "q7Wf9N": "",
     "sJex2j": ""
   }
 }
