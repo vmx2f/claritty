@@ -1,20 +1,24 @@
 'use client';
 
-import { useLocale } from 'next-intl';
+import { useExtracted, useLocale } from 'next-intl';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { useParams } from 'next/navigation';
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
+import { CheckIcon, LanguageIcon } from '@heroicons/react/16/solid';
+import Popover from '../layout/popover';
 
 export default function LanguageToggle() {
+    const t = useExtracted('languages');
     const locale = useLocale();
     const router = useRouter();
     const pathname = usePathname();
     const params = useParams();
     const [isPending, startTransition] = useTransition();
+    const [isLanguageOpen, setIsLanguageOpen] = useState(false);
 
     const languages = [
-        { code: 'en', name: 'English' },
-        { code: 'es', name: 'Español' }
+        { code: 'en', name: t('English') },
+        { code: 'es', name: t('Spanish') },
     ];
 
     function setLanguage(nextLocale: string) {
@@ -29,20 +33,39 @@ export default function LanguageToggle() {
         });
     }
 
-    const selectedLanguage = languages.find(l => l.code === locale);
-
     return (
-        <label className="select-border">
-            <span className="sr-only">Change language</span>
-            <select
-                defaultValue={locale}
-                className="bg-main focus-within:outline-none active:"
-                onChange={(e) => setLanguage(e.target.value)}
-                disabled={isPending}
-            >
-                <option value="en">English</option>
-                <option value="es">Español</option>
-            </select>
-        </label>
+        <Popover
+            mode="click"
+            position="left-bottom"
+            onOpenChange={setIsLanguageOpen}
+            trigger={({ onClick }) => (
+                <button onClick={onClick} className="btn">
+                    <LanguageIcon className="h-5" />
+                    <span>{t('Language')}</span>
+                </button>
+            )}
+        >
+            <div className="py-3 bg-main/90 rounded-lg shadow-lg border border-border">
+                <div className="p-2 rounded-md min-w-[150px]">
+                    <span className="hint mb-2 px-2 block">{t('Select language')}</span>
+                    <div className="flex flex-col gap-0.5">
+                        {languages.map(({ code, name }) => (
+                            <button
+                                key={code}
+                                onClick={() => setLanguage(code)}
+                                disabled={isPending}
+                                className={`px-3 py-2 rounded-sm text-sm flex justify-between ${locale === code ? 'btn' : 'hover:bg-primary-text/5'}
+                                `}
+                            >
+                                <span>{name}</span>
+                                {locale === code && (
+                                    <CheckIcon className="w-4"/>
+                                )}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </Popover>
     );
 }

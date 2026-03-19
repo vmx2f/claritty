@@ -9,7 +9,7 @@
     --hover-text: #000000;
     --subtle-color: #5a5a5a;
     --card-color: #ffffff;
-    --success-color: #0f0f0f;
+    --success-color: #83d358;
     --warning-color: #202020;
     --error-color: #000000;
     --info-color: #1a1a1a;
@@ -26,7 +26,7 @@
     --hover-text: #ffffff;
     --subtle-color: #8a8a8a;
     --card-color: #121212;
-    --success-color: #e5e5e5;
+    --success-color: #3a6b20;
     --warning-color: #d9d9d9;
     --error-color: #ffffff;
     --info-color: #cfcfcf;
@@ -55,20 +55,38 @@
     body {
       @apply transition duration-100 bg-main text-primary-text;
     }
-    button {
+    /* button {
       @apply transition-colors duration-100 bg-primary-text text-main px-5 py-2 rounded-full hover:bg-text-hover;
+    } */
+    h1 {
+      @apply text-5xl sm:text-6xl font-extrabold;
+    }
+    h2 {
+      @apply text-3xl sm:text-4xl font-bold;
+    }
+    p {
+      @apply text-lg;
     }
   } 
 
   @layer components {
     .btn {
-      @apply transition-colors duration-100 text-sm font-medium px-4 py-2 rounded-md bg-primary-text/10 hover:bg-primary-text/5 text-center;
+      @apply flex justify-center items-center text-center transition-colors duration-100 text-sm font-medium px-4 py-2 rounded-md bg-primary-text/10 hover:bg-primary-text/5 gap-1.5;
     }
     .btn-reverse {
       @apply bg-primary-text text-main hover:bg-primary-text/90;
     }
     .btn-border {
-      @apply border bg-transparent text-primary-text border-solid hover:bg-hover;
+      @apply border bg-transparent text-primary-text border-border hover:bg-hover;
+    }
+    .title {
+      @apply tracking-tight leading-[1.1] mb-6;
+    }
+    .hint {
+      @apply text-sm text-subtle;
+    }
+    .card {
+      @apply text-sm p-6 rounded-xl bg-card/50 border border-border drop-shadow-sm;
     }
     .text-success {
       color: var(--color-success);

@@ -35,26 +35,26 @@ export function LoginForm() {
   };
 
   return (
-    <div className="text-sm w-full mx-auto p-6 rounded-xl bg-card/50 border border-subtle drop-shadow-sm">
-      <h2 className="font-bold mb-2">{t("Login to your account")}</h2>
-      <p className="text-primary-text/50 mb-5">{t("Enter your information below to access your account")}</p>
+    <div className="card">
+      <h2>{t("Login to your account")}</h2>
+      <p className="text-primary-text/50 my-5 text-sm">{t("Enter your information below to access your account")}</p>
       <div className="flex flex-col gap-3 mb-4">
-        <button className="text-primary-text w-full px-3 py-2 border border-subtle rounded-lg focus:outline-none transition-all duration-300 focus:ring-3 focus:ring-subtle/90 bg-card hover:bg-subtle/80">
+        <button className="btn btn-border">
           {t('Login with Google')}
         </button>
-        <button className="text-primary-text  w-full px-3 py-2 border border-subtle rounded-lg focus:outline-none transition-all duration-300 focus:ring-3 focus:ring-subtle/90 bg-card hover:bg-subtle/80">
+        <button className="btn btn-border">
           {t('Login with Apple')}
         </button>
-        <button className="text-primary-text  w-full px-3 py-2 border border-subtle rounded-lg focus:outline-none transition-all duration-300 focus:ring-3 focus:ring-subtle/90 bg-card hover:bg-subtle/80">
+        <button className="btn btn-border">
           {t('Login with Facebook')}
         </button>
       </div>
       <div className="flex items-center gap-4 mb-5">
-        <div className="flex-1 border-t border-neutral-700"></div>
-        <span className=" text-neutral-400 whitespace-nowrap">
-          Or continue with
+        <div className="flex-1 border-t border-border"></div>
+        <span className=" text-subtle">
+          {t("Or continue with")}
         </span>
-        <div className="flex-1 border-t border-neutral-700"></div>
+        <div className="flex-1 border-t border-border"></div>
       </div>
 
       <form onSubmit={handleLogin} className="space-y-4">
@@ -68,7 +68,7 @@ export function LoginForm() {
             value={email}
             placeholder="mail@example.com"
             onChange={(e) => setEmail(e.target.value)}
-            className=" w-full px-3 py-2 border border-subtle rounded-lg focus:outline-none transition-all duration-300 focus:ring-3 focus:ring-subtle/90 bg-card"
+            className="w-full btn btn-border text-left"
             required
           />
         </div>
@@ -88,7 +88,7 @@ export function LoginForm() {
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 pr-10 border border-subtle rounded-lg focus:outline-none transition-all duration-300 focus:ring-3 focus:ring-subtle/90 bg-card"
+              className="w-full btn btn-border text-left"
               required
             />
             <button
@@ -106,13 +106,13 @@ export function LoginForm() {
         </div>
 
         {error && (
-          <div className="text-red-500 ">{error}</div>
+          <div className="text-red-400 ">{error}</div>
         )}
 
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full  py-2 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full btn btn-reverse disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? t('Logging in...') : t('Login')}
         </button>
@@ -120,7 +120,7 @@ export function LoginForm() {
           <label htmlFor="password" className=" mb-2 pr-1">
             {t(`Don't have an account?`)}
           </label>
-          <Link href={'/register'} className=" text-left underline mb-2 hover:text-primary-text">
+          <Link href={'/register'} className="text-left underline mb-2 hover:text-primary-text">
             {t('Sign up')}
           </Link>
         </div>

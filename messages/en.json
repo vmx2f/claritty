@@ -4,6 +4,7 @@
     "odXlk8": "Log in",
     "25WwxF": "Don't have an account?",
     "3t2ZWR": "Login to your account",
+    "4cSA+G": "Or continue with",
     "5sg7KC": "Password",
     "8HJxXG": "Sign up",
     "AWVk03": "Logging in...",
@@ -14,17 +15,23 @@
     "HJo9Ji": "Enter your information below to access your account",
     "MZCt8F": "Login with Apple",
     "sy+pv5": "Email",
-    "4cSA+G": "Or continue with",
     "GgThsK": "Sign up with Apple",
     "HAlOn1": "Name",
     "hC5cn7": "Enter your information below to create your account",
     "huqKGl": "Create account",
+    "LcAU9+": "Password must contain:",
     "QJob30": "Sign up with Facebook",
     "SeO7GZ": "Create your account",
+    "SMiU5u": "At least one letter",
     "SQJto2": "Sign in",
     "uCk8r+": "Already have an account?",
     "v7Bl2J": "Creating account...",
-    "wUCGLt": "Sign up with Google"
+    "wUCGLt": "Sign up with Google",
+    "YwMziN": "At least 8 characters",
+    "/t10pK": "Login or register",
+    "6ojn9k": "You're already loged in",
+    "Oeu69m": "Go to dashboard",
+    "PlBReU": "Log out"
   },
   "navbar": {
     "HCnHb1": "./Link3",
@@ -32,6 +39,17 @@
     "tSZp9o": "./Home",
     "UnHpzG": "./Link1"
   },
+  "languages": {
+    "8WtyrD": "Spanish",
+    "eVlu1R": "Select language",
+    "WkrNSk": "English",
+    "y1Z3or": "Language"
+  },
+  "JqYRWE": "Create Organization",
+  "Qf8ENv": "Checking your organizations...",
+  "Qg5VDC": "Welcome to Claritty!",
+  "qzYtrp": "Start using dashboard",
+  "W6NpE9": "Let's get started by creating your first organization",
   "metadata": {
     "ejEGdx": "Home",
     "keywords": {
@@ -42,19 +60,14 @@
     "xl217p": "title",
     "Xstf7k": "alt text"
   },
-  "JqYRWE": "Create Organization",
-  "Qf8ENv": "Checking your organizations...",
-  "Qg5VDC": "Welcome to Claritty!",
-  "qzYtrp": "Start using dashboard",
-  "W6NpE9": "Let's get started by creating your first organization",
   "Home": {
     "88zzPX": "Made by vmx",
-    "AyGauy": "Login",
-    "deEeEI": "Register",
     "EemWC3": "Log-in to your account or register and ask your manager to invite you to your organization.",
     "N5WoR+": "Welcome Back!",
     "6O/fGd": "Set of tools made to have an easier business management.",
+    "AyGauy": "Login",
     "bjEq9R": "Clear.",
+    "deEeEI": "Register",
     "fKkqoY": "Management made ",
     "sJex2j": "Never loose track of your businesses"
   }

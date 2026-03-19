@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-// import Navbar from "../../_components/layout/navbar";
 import { getExtracted } from "next-intl/server";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -41,12 +40,18 @@ export async function generateMetadata(): Promise<Metadata> {
 
 type Props = {
   children: React.ReactNode;
+  auth: React.ReactNode;
 };
 
-export default function LandingLayout({ children }: Props) {
+export default function LandingLayout({ children, auth }: Props) {
   return (
-    <section>
+    <section className="flex flex-col lg:flex-row h-screen">
+      <main className="w-full lg:w-1/2 flex flex-col justify-center px-8 sm:px-16 items-center py-12">
         {children}
+        </main>
+        <aside className="lg:w-1/2 bg-main/60 flex items-center justify-center flex-col gap-8 py-12 border-t lg:border-t-0 lg:border-l border-border">
+        {auth}
+        </aside>
     </section>
   );
 }

@@ -15,9 +15,8 @@ export function RegisterForm() {
   const [error, setError] = useState("");
   const t = useExtracted("auth");
 
-  // More permissive password validation checks
   const passwordChecks = {
-    minLength: password.length >= 6,
+    minLength: password.length >= 8,
     hasLetter: /[a-zA-Z]/.test(password),
   };
 
@@ -58,28 +57,28 @@ export function RegisterForm() {
   };
 
   return (
-    <div className="text-sm w-full mx-auto p-6 rounded-xl bg-card/50 border border-subtle drop-shadow-sm">
-      <h2 className="font-bold mb-2">{t("Create your account")}</h2>
-      <p className="text-primary-text/50  mb-5">
+    <div className="card">
+      <h2>{t("Create your account")}</h2>
+      <p className="text-primary-text/50 my-5 text-sm">
         {t("Enter your information below to create your account")}
       </p>
       <div className="flex flex-col gap-3 mb-4">
-        <button className="text-primary-text  w-full px-3 py-2 border border-subtle rounded-lg focus:outline-none transition-all duration-300 focus:ring-3 focus:ring-subtle/90 bg-card hover:bg-subtle/80">
+        <button className="btn btn-border">
           {t("Sign up with Google")}
         </button>
-        <button className="text-primary-text  w-full px-3 py-2 border border-subtle rounded-lg focus:outline-none transition-all duration-300 focus:ring-3 focus:ring-subtle/90 bg-card hover:bg-subtle/80">
+        <button className="btn btn-border">
           {t("Sign up with Apple")}
         </button>
-        <button className="text-primary-text  w-full px-3 py-2 border border-subtle rounded-lg focus:outline-none transition-all duration-300 focus:ring-3 focus:ring-subtle/90 bg-card hover:bg-subtle/80">
+        <button className="btn btn-border">
           {t("Sign up with Facebook")}
         </button>
       </div>
       <div className="flex items-center gap-4 mb-5">
-        <div className="flex-1 border-t border-neutral-700"></div>
-        <span className=" text-neutral-400 whitespace-nowrap">
+        <div className="flex-1 border-t border-border"></div>
+        <span className=" text-subtle">
           {t("Or continue with")}
         </span>
-        <div className="flex-1 border-t border-neutral-700"></div>
+        <div className="flex-1 border-t border-border"></div>
       </div>
 
       <form onSubmit={handleRegister} className="space-y-4">
@@ -93,7 +92,7 @@ export function RegisterForm() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="John Doe"
-            className=" w-full px-3 py-2 border border-subtle rounded-lg focus:outline-none transition-all duration-300 focus:ring-3 focus:ring-subtle/90 bg-card"
+            className="w-full btn btn-border text-left"
             required
           />
         </div>
@@ -108,7 +107,7 @@ export function RegisterForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="mail@example.com"
-            className=" w-full px-3 py-2 border border-subtle rounded-lg focus:outline-none transition-all duration-300 focus:ring-3 focus:ring-subtle/90 bg-card"
+            className="w-full btn btn-border text-left"
             required
           />
         </div>
@@ -123,7 +122,7 @@ export function RegisterForm() {
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 pr-10 border border-subtle rounded-lg focus:outline-none transition-all duration-300 focus:ring-3 focus:ring-subtle/90 bg-card"
+              className="w-full btn btn-border text-left"
               required
               minLength={6}
             />
@@ -142,52 +141,23 @@ export function RegisterForm() {
 
           {/* Simplified password requirements */}
           <div className="mt-3">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs text-subtle">Password strength:</span>
-              <span
-                className={`text-xs font-medium ${password ? getPasswordStrength().color : "text-gray-400"}`}
-              >
-                {password ? getPasswordStrength().text : "Enter password"}
-              </span>
-            </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-              <div
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  !password
-                    ? "bg-gray-300 dark:bg-gray-600 w-0"
-                    : getPasswordStrength().text === "Weak"
-                      ? "bg-red-500 w-1/3"
-                      : getPasswordStrength().text === "Fair"
-                        ? "bg-yellow-500 w-2/3"
-                        : "bg-green-500 w-full"
-                }`}
-              />
-            </div>
             <div className="mt-2 space-y-1">
-              <p className="text-xs text-subtle mb-2">Password must contain:</p>
+              <p className="text-xs text-subtle mb-2">{t('Password must contain:')}</p>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span
-                    className={`text-xs ${passwordChecks.minLength ? "text-success" : "text-gray-400"}`}
-                  >
-                    {passwordChecks.minLength ? "✓" : "○"}
+                  <span className={`text-xs ${passwordChecks.minLength ? "text-success" : "text-subtle"}`}>
+                    {passwordChecks.minLength ? "✓" : "✗"}
                   </span>
-                  <span
-                    className={`text-xs ${passwordChecks.minLength ? "text-success" : "text-gray-400"}`}
-                  >
-                    At least 6 characters
+                  <span className={`text-xs ${passwordChecks.minLength ? "text-success" : "text-subtle"}`}>
+                    {t('At least 8 characters')}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span
-                    className={`text-xs ${passwordChecks.hasLetter ? "text-success" : "text-gray-400"}`}
-                  >
-                    {passwordChecks.hasLetter ? "✓" : "○"}
+                  <span className={`text-xs ${passwordChecks.hasLetter ? "text-success" : "text-subtle"}`}>
+                    {passwordChecks.hasLetter ? "✓" : "✗"}
                   </span>
-                  <span
-                    className={`text-xs ${passwordChecks.hasLetter ? "text-success" : "text-gray-400"}`}
-                  >
-                    At least one letter
+                  <span className={`text-xs ${passwordChecks.hasLetter ? "text-success" : "text-subtle"}`}>
+                    {t('At least one letter')}
                   </span>
                 </div>
               </div>
@@ -200,7 +170,7 @@ export function RegisterForm() {
         <button
           type="submit"
           disabled={isLoading || !isPasswordValid}
-          className="w-full  py-2 px-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full btn btn-reverse disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? t("Creating account...") : t("Create account")}
         </button>
