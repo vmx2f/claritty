@@ -3,12 +3,7 @@
 import { useState, useEffect } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import {
-  BuildingOfficeIcon,
-  ChevronDownIcon,
   UserCircleIcon,
-  PlusIcon,
-  CheckIcon,
-  Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { authClient } from "@/lib/auth-client";
@@ -19,6 +14,7 @@ import ThemeSwitch from "../layout/theme-switch";
 import LanguageToggle from "../providers/language-toggle";
 import { getSidebarNavItems, NAV_TO_PERMISSION } from "@/constants/navigation";
 import { isNavItemActive, normalizeOrganizationBlockState } from "@/blocks/runtime";
+import OrganizationProfile from "./organization-profile";
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -109,86 +105,10 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
 
   return (
     <>
-      <div className={`relative bg-card border-r border-border transition-all duration-300 h-screen flex flex-col ${isCollapsed ? "w-14" : "w-52"
-        }`}>
+      <div className={`border-r border-border transition-all duration-100 flex flex-col ${isCollapsed ? "w-14" : "w-52"}`}>
 
         {/* Header - Organization Selector + Collapse */}
-        <div className="p-2.5 border-b border-border">
-          {isCollapsed ? (
-            <button
-              onClick={onToggle}
-                className="w-full flex items-center justify-center p-1.5 hover:bg-hover rounded-lg transition-colors bg-primary-text/10"
-                title="Expand sidebar"
-              >
-                <Bars3Icon className="w-4 h-4 text-primary-text" />
-              </button>
-          ) : (
-            <div className="relative flex items-center gap-1">
-              <button
-                onClick={() => setIsOrgDropdownOpen(!isOrgDropdownOpen)}
-                className="flex-1 min-w-0 flex items-center gap-2 p-1.5 hover:bg-hover rounded-lg transition-colors group text-left bg-main/10"
-              >
-                <div className="w-7 h-7 rounded-lg bg-primary-text/80 flex items-center justify-center shrink-0 overflow-hidden">
-                  {orgImageUrl ? (
-                    <img src={orgImageUrl} alt="" className="w-full h-full object-cover" />
-                  ) : (
-                    <BuildingOfficeIcon className="w-3.5 h-3.5 text-primary-text" />
-                  )}
-                </div>
-                <div className="flex-1 min-w-0 text-left">
-                  <p className="text-[11px] font-semibold text-primary-text truncate">
-                    {selectedOrg?.name    || "Select Org"}
-                  </p>
-                  <p className="text-[9px] text-secondary-text truncate">
-                    {selectedOrg?.userRole || ""}
-                  </p>
-                </div>
-                <ChevronDownIcon className={`w-3.5 h-3.5 text-secondary-text transition-transform shrink-0 ${isOrgDropdownOpen ? "rotate-180" : ""}`} />
-              </button>
-
-              {isOrgDropdownOpen && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-card rounded-lg shadow-xl border border-border z-50 overflow-hidden">
-                  <div className="max-h-64 overflow-y-auto">
-                    {organizations && organizations.length > 0 ? (
-                      organizations.filter((o): o is NonNullable<typeof o> => o != null).map((org) => (
-                        <button
-                          key={org._id}
-                          onClick={() => {
-                            setSelectedOrgId(org._id);
-                            setIsOrgDropdownOpen(false);
-                          }}
-                          className={`w-full rounded-none text-left px-2 py-2 text-sm hover:bg-primary-text/10 transition-colors flex items-center justify-between ${selectedOrgId === org._id ? "bg-primary-text/10" : "bg-main/10"
-                            }`}
-                        >
-                          <div className="flex gap-1">
-                            {selectedOrgId === org._id && <CheckIcon className="w-3 text-primary-text shrink-0" />}
-                            <p className="text-xs font-medium text-primary-text truncate">{org.name}</p>
-                          </div>
-                          <p className="text-[10px] text-secondary-text">{org.userRole}</p>
-                          
-                        </button>
-                      ))
-                    ) : (
-                      <div className="p-3 text-xs text-secondary-text">No organizations</div>
-                    )}
-                  </div>
-                  <div className="border-t border-border">
-                    <button
-                      onClick={() => {
-                        setShowCreateOrgModal(true);
-                        setIsOrgDropdownOpen(false);
-                      }}
-                      className="w-full rounded-none text-left px-3 py-2 text-xs font-medium bg-main/10 text-primary-text transition-colors flex items-center gap-1 hover:bg-primary-text/10"
-                    >
-                      <PlusIcon className="w-4 h-4" />
-                      New Organization
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+        <OrganizationProfile/>
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto p-1.5 space-y-0.5">

@@ -35,7 +35,7 @@ export function LoginForm() {
   };
 
   return (
-    <div className="card">
+    <div className="card lg:w-120">
       <h2>{t("Login to your account")}</h2>
       <p className="text-primary-text/50 my-5 text-sm">{t("Enter your information below to access your account")}</p>
       <div className="flex flex-col gap-3 mb-4">

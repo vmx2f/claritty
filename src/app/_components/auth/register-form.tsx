@@ -57,7 +57,7 @@ export function RegisterForm() {
   };
 
   return (
-    <div className="card">
+    <div className="card lg:w-120">
       <h2>{t("Create your account")}</h2>
       <p className="text-primary-text/50 my-5 text-sm">
         {t("Enter your information below to create your account")}

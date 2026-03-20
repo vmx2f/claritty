@@ -3,18 +3,21 @@
 import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter, usePathname } from "next/navigation";
-import Sidebar from "@/app/_components/dashboard/sidebar";
-import TopBar from "@/app/_components/dashboard/top-bar";
-import BottomNav from "@/app/_components/dashboard/bottom-nav";
 import { OrganizationProvider } from "@/contexts/OrganizationContext";
 import { useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import { useCommandPalette } from "@/hooks/useCommandPalette";
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+type Props = {
+  children: React.ReactNode;
+  sidebar: React.ReactNode;
+  topbar: React.ReactNode;
+  bottombar: React.ReactNode;
+};
+
+export default function DashboardLayout({ children, sidebar, topbar, bottombar }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -77,23 +80,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <OrganizationProvider>
       <section className="w-full h-screen flex">
-        {/* Sidebar: desktop only */}
-        {!isMobile && (
-          <Sidebar
-            isCollapsed={isSidebarCollapsed}
-            onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-          />
-        )}
+        {!isMobile && sidebar}
         <div className="flex-1 flex flex-col min-w-0">
-          <TopBar 
-            isSidebarCollapsed={isSidebarCollapsed}
-            onToggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-          />
+          {topbar}
           <main className={`flex-1 overflow-auto ${isMobile ? "pb-20" : ""}`}>
             {children}
           </main>
-          {/* Bottom nav: mobile only */}
-          {isMobile && <BottomNav />}
+          {isMobile && bottombar}
         </div>
       </section>
     </OrganizationProvider>

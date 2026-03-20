@@ -8,6 +8,7 @@ interface PopoverProps {
   mode?: 'hover' | 'click';
   position?: 'right-top' | 'left-top' | 'right-bottom' | 'left-bottom' | 'top-center' | 'top-right' | 'bottom-center';
   onOpenChange?: (isOpen: boolean) => void;
+  className?: string; // optional className
 }
 
 const Popover: React.FC<PopoverProps> = ({
@@ -16,6 +17,7 @@ const Popover: React.FC<PopoverProps> = ({
   mode = 'hover',
   position = 'right-top',
   onOpenChange,
+  className = '',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -80,18 +82,15 @@ const Popover: React.FC<PopoverProps> = ({
           })
         : trigger}
 
-      {/* We use conditional classes instead of {isOpen && ...} 
-          to allow Tailwind transitions to trigger on 'opacity' and 'scale'.
-      */}
       <div
         className={`
-          absolute z-50 min-w-max bg-primary rounded-lg shadow-xl
-          transition-all duration-300 ease-out
+          absolute z-50 transition-all duration-100 ease-out
           ${getPositionClasses()}
           ${isOpen 
             ? 'opacity-100 translate-y-0 scale-100 pointer-events-auto' 
             : 'opacity-0 translate-y-2 scale-95 pointer-events-none'
           }
+          ${className}
         `}
       >
         {children}
