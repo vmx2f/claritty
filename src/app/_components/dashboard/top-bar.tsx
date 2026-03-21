@@ -32,17 +32,11 @@ export default function TopBar(props: TopBarProps) {
     check();
   }, []);
 
-  const handleSignOut = async () => {
-    await authClient.signOut();
-    window.location.href = "/";
-  };
-
   return (
     <header className="border-b border-border px-4 md:px-6 py-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center min-w-0">
-          {/* Sidebar collapse button - desktop only */}
-          {props.onToggleSidebar && (
+          {/* {props.onToggleSidebar && (
             <button
               onClick={props.onToggleSidebar}
               className="hidden md:flex p-1 hover:bg-hover rounded-lg transition-colors text-secondary-text hover:text-primary-text bg-main/10 border border-primary-text/10 mr-4"
@@ -50,7 +44,7 @@ export default function TopBar(props: TopBarProps) {
             >
               <ChevronLeftIcon className={`w-3.5 h-3.5 transition-transform ${props.isSidebarCollapsed ? "rotate-180" : ""}`} />
             </button>
-          )}
+          )} */}
           <p className="text-sm text-secondary-text">Dashboard</p>
           <span className="mx-2 text-sm text-secondary-text">/</span>
           <p className="text-sm font-medium text-primary-text truncate">{pageName}</p>
