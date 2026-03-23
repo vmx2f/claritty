@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useMutation, useQuery } from "convex/react";
-import { api } from "../../../../../../convex/_generated/api";
-import { Id } from "../../../../../../convex/_generated/dataModel";
-import { useOrganization } from "../../../../../contexts/OrganizationContext";
-import { formatCurrency } from "../../../../../lib/currency";
+import { api } from "@/../convex/_generated/api";
+import { Id } from "@/../convex/_generated/dataModel";
+import { useOrganization } from "../../../../_components/providers/organization-provider";
+import { formatCurrency } from "@/lib/currency";
 import { EXPENSE_SOURCES, INCOME_SOURCES } from "@/app/_constants/transactions";
 import {
   ArrowTrendingUpIcon,
@@ -104,22 +104,6 @@ export default function TransactionsPage() {
     setCreateProductInline(false);
     setShowModal(true);
   };
-
-  if (!selectedOrgId) {
-    return (
-      <div className="p-8 max-w-7xl mx-auto">
-        <div className="text-center py-20 bg-card rounded-xl border border-border border-dashed">
-          <BanknotesIcon className="w-16 h-16 text-secondary-text mx-auto mb-4 opacity-50" />
-          <h3 className="text-lg font-medium text-primary-text mb-2">
-            No Organization Selected
-          </h3>
-          <p className="text-secondary-text">
-            Select an organization to manage ingresos y salidas.
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="p-8 max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">

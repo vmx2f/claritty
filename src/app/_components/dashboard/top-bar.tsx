@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { usePathname } from "@/i18n/navigation";
 import { authClient } from "@/lib/auth-client";
 import { isNavItemActive } from "@/blocks/runtime";
-import { getSidebarNavItems } from "@/constants/navigation";
-import { useOrganization } from "@/contexts/OrganizationContext";
+import { getSidebarNavItems } from "@/app/_constants/navigation";
+import { useOrganization } from "@/app/_components/providers/organization-provider";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import { CommandPalette } from "../palette/CommandPalette";
 
@@ -33,7 +33,7 @@ export default function TopBar(props: TopBarProps) {
   }, []);
 
   return (
-    <header className="border-b border-border px-4 md:px-6 py-4">
+    <header className="border-b border-border px-4 md:px-6 py-4 ">
       <div className="flex items-center justify-between">
         <div className="flex items-center min-w-0">
           {/* {props.onToggleSidebar && (

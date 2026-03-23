@@ -5,7 +5,7 @@ import { ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "@/i18n/navigation";
 import { useActionResolver } from "@/hooks/useActionResolver";
 import { useServiceLayer } from "@/hooks/useServiceLayer";
-import { useOrganization } from "@/contexts/OrganizationContext";
+import { useOrganization } from "@/app/_components/providers/organization-provider";
 import { actionRegistry } from "@/registry/actionRegistry";
 import type { ActionDefinition } from "@/registry/types";
 import { useChatStore } from "@/store/chatStore";

@@ -71,13 +71,13 @@
 
   @layer components {
     .btn {
-      @apply flex justify-center items-center text-center transition-colors duration-100 text-sm font-medium px-4 py-2 rounded-md bg-primary-text/10 hover:bg-primary-text/5 gap-1.5;
+      @apply flex justify-center items-center text-center transition-colors duration-100 text-sm font-medium px-4 py-2 rounded-md bg-primary-text/10 hover:bg-primary-text/5 gap-1.5 hover:text-primary-text;
     }
     .btn-reverse {
       @apply bg-primary-text text-main hover:bg-primary-text/90;
     }
     .btn-border {
-      @apply border bg-transparent text-primary-text border-border hover:bg-hover;
+      @apply border bg-main text-primary-text border-border hover:bg-hover;
     }
     .title {
       @apply tracking-tight leading-[1.1] mb-6;

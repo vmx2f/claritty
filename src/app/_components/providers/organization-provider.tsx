@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, ReactNode } from "react";
-import { Id } from "../../convex/_generated/dataModel";
+import { Id } from "@/../convex/_generated/dataModel";
 import { defaultOrganizationBlockState } from "@/blocks/runtime";
 import type { BlockId } from "@/blocks/types";
 

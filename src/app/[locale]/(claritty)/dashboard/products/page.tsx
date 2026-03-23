@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../../../convex/_generated/api";
 import { Id } from "../../../../../../convex/_generated/dataModel";
-import { useOrganization } from "../../../../../contexts/OrganizationContext";
+import { useOrganization } from "../../../../_components/providers/organization-provider";
 import { formatCurrency } from "../../../../../lib/currency";
 import {
   PlusIcon,

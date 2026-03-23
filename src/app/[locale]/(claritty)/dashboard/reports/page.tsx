@@ -21,7 +21,7 @@ import {
 } from "recharts";
 import { api } from "../../../../../../convex/_generated/api";
 import { ExportControls } from "@/app/_components/export/export-controls";
-import { useOrganization } from "../../../../../contexts/OrganizationContext";
+import { useOrganization } from "../../../../_components/providers/organization-provider";
 import { formatCurrency } from "../../../../../lib/currency";
 import {
   ArrowTrendingDownIcon,

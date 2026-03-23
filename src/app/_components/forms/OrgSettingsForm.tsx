@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import { useOrganization } from "@/contexts/OrganizationContext";
+import { useOrganization } from "@/app/_components/providers/organization-provider";
 import { useServiceLayer } from "@/hooks/useServiceLayer";
 
 type OrgSettingsFormProps = {

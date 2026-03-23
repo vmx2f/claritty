@@ -6,13 +6,15 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { authClient } from "@/lib/auth-client";
-import { useMutation, useQuery } from "convex/react";
-import { api } from "../../../../convex/_generated/api";
-import { useOrganization } from "../../../contexts/OrganizationContext";
+import { useQuery } from "convex/react";
+import { api } from "@/../convex/_generated/api";
+import { useOrganization } from "../providers/organization-provider";
 import ThemeSwitch from "../layout/theme-switch";
 import LanguageToggle from "../providers/language-toggle";
-import { getSidebarNavItems } from "@/constants/navigation";
+import { getSidebarNavItems } from "@/app/_constants/navigation";
 import {  normalizeOrganizationBlockState } from "@/blocks/runtime";
+import { useExtracted } from "next-intl";
+
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -22,19 +24,14 @@ interface SidebarProps {
 export const navigation = getSidebarNavItems();
 
 export default function SidebarProfile({ isCollapsed, onToggle }: SidebarProps) {
+  const t = useExtracted('commons')
   const [user, setUser] = useState<{ name?: string; email?: string } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [showCreateOrgModal, setShowCreateOrgModal] = useState(false);
-  const [newOrgName, setNewOrgName] = useState("");
-  const [newOrgDescription, setNewOrgDescription] = useState("");
 
   // Organization management & notifications
   const organizations = useQuery(api.organizations.getUserOrganizations);
-  const createOrgMutation = useMutation(api.organizations.createOrganization);
-  const { selectedOrgId, setSelectedOrgId, activeBlocks, setActiveBlocks } = useOrganization();
-  const selectedOrg = organizations?.find((o) => o != null && o._id === selectedOrgId);
-  const orgImageStorageId = selectedOrg?.imageStorageId ?? null;
+  const { selectedOrgId, setSelectedOrgId,  setActiveBlocks } = useOrganization();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -115,13 +112,13 @@ export default function SidebarProfile({ isCollapsed, onToggle }: SidebarProps) 
                 onClick={() => setIsDropdownOpen(false)}
                 className="block w-full text-left px-3 py-2 text-xs text-primary-text hover:bg-hover transition-colors bg-primary-text/10"
               >
-                User Settings
+                {t('User Settings')}
               </Link>
               <button
                 onClick={handleSignOut}
                 className="w-full text-left px-3 py-2 text-xs text-error hover:bg-error/10 transition-colors bg-primary-text/10"
               >
-                Sign Out
+                {t('Sign Out')}
               </button>
             </div>
           )}
@@ -129,7 +126,7 @@ export default function SidebarProfile({ isCollapsed, onToggle }: SidebarProps) 
       ) : (
         <div className="flex items-center gap-2 p-2">
           <UserCircleIcon className="w-8 h-8 text-secondary-text shrink-0" />
-          {!isCollapsed && <span className="text-xs text-secondary-text">Not logged in</span>}
+          {!isCollapsed && <span className="text-xs text-secondary-text">{t('Not logged in')}</span>}
         </div>
       )}
     </div>

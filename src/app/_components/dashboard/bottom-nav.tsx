@@ -2,8 +2,8 @@
 
 import { Link, usePathname } from "@/i18n/navigation";
 import { isNavItemActive } from "@/blocks/runtime";
-import { getBottomNavItems } from "@/constants/navigation";
-import { useOrganization } from "@/contexts/OrganizationContext";
+import { getBottomNavItems } from "@/app/_constants/navigation";
+import { useOrganization } from "@/app/_components/providers/organization-provider";
 
 export default function BottomNav() {
   const pathname = usePathname();

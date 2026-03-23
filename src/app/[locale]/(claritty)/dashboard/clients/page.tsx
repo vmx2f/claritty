@@ -18,7 +18,7 @@ import {
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../../../convex/_generated/api";
 import { Id } from "../../../../../../convex/_generated/dataModel";
-import { useOrganization } from "../../../../../contexts/OrganizationContext";
+import { useOrganization } from "../../../../_components/providers/organization-provider";
 import { formatCurrency } from "../../../../../lib/currency";
 
 export default function DashboardClients() {
@@ -139,23 +139,13 @@ export default function DashboardClients() {
     return (
         <div className="p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500">
             
-            {/* Check if organization exists */}
-            {!selectedOrgId ? (
-                <div className="text-center py-20 bg-card rounded-xl border border-border border-dashed">
-                    <div className="mb-4">
-                        <h3 className="text-lg font-medium text-primary-text mb-2">No Organization Selected</h3>
-                        <p className="text-secondary-text mb-4">Please select an organization from the sidebar to manage clients.</p>
-                    </div>
+            {/* Header Section */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold text-primary-text tracking-tight">Clients</h1>
+                    <p className="text-secondary-text mt-1">Manage your client relationships and track interactions.</p>
                 </div>
-            ) : (
-                <>
-                    {/* Header Section */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <div>
-                            <h1 className="text-3xl font-bold text-primary-text tracking-tight">Clients</h1>
-                            <p className="text-secondary-text mt-1">Manage your client relationships and track interactions.</p>
-                        </div>
-                        <button 
+                <button 
                             onClick={() => setShowCreateModal(true)}
                             className="flex items-center gap-2 bg-primary-text text-main px-6 py-2.5 rounded-full hover:bg-text-hover transition-all shadow-lg hover:shadow-xl active:scale-95 font-medium"
                         >
@@ -333,8 +323,6 @@ export default function DashboardClients() {
                             }}
                         />
                     )}
-                </>
-            )}
         </div>
     );
 }

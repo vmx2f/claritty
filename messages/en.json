@@ -6,6 +6,17 @@
     "sFoGzO": "No organizations",
     "VzzYJk": "Create"
   },
+  "sidebar": {
+    "chat": "Chat",
+    "clients": "Clients",
+    "flowChart": "Flow Chart",
+    "notifications": "Notifications",
+    "orders": "Orders",
+    "products": "Products",
+    "reports": "Reports",
+    "settings": "Settings",
+    "transactions": "Incomes & outcomes"
+  },
   "auth": {
     "deEeEI": "Register",
     "odXlk8": "Log in",
@@ -39,6 +50,11 @@
     "6ojn9k": "You're already loged in",
     "Oeu69m": "Go to dashboard",
     "PlBReU": "Log out"
+  },
+  "commons": {
+    "3pLtbV": "Not logged in",
+    "F62y+K": "Sign Out",
+    "jUes8R": "User Settings"
   },
   "navbar": {
     "HCnHb1": "./Link3",

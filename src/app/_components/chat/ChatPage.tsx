@@ -8,7 +8,7 @@ import { ChatThread } from "@/app/_components/chat/ChatThread";
 import { useRouter } from "@/i18n/navigation";
 import { useActionResolver } from "@/hooks/useActionResolver";
 import { useServiceLayer } from "@/hooks/useServiceLayer";
-import { useOrganization } from "@/contexts/OrganizationContext";
+import { useOrganization } from "@/app/_components/providers/organization-provider";
 import type { ActionDefinition } from "@/registry/types";
 import { useChatStore } from "@/store/chatStore";
 import { useLogStore } from "@/store/logStore";

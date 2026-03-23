@@ -6,6 +6,17 @@
     "sFoGzO": "",
     "VzzYJk": ""
   },
+  "sidebar": {
+    "chat": "Chat",
+    "clients": "Clientes",
+    "flowChart": "Diagrama de Flujo",
+    "notifications": "Notificaciones",
+    "orders": "Pedidos",
+    "products": "Productos",
+    "reports": "Reportes",
+    "settings": "Configuración",
+    "transactions": "Ingresos y Salidas"
+  },
   "auth": {
     "deEeEI": "",
     "odXlk8": "",
@@ -39,6 +50,11 @@
     "6ojn9k": "",
     "Oeu69m": "",
     "PlBReU": ""
+  },
+  "commons": {
+    "3pLtbV": "",
+    "F62y+K": "",
+    "jUes8R": ""
   },
   "navbar": {
     "HCnHb1": "",

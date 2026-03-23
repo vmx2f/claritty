@@ -1,6 +1,6 @@
 "use client";
 
-import { getSidebarNavItems} from "@/constants/navigation";
+import { getSidebarNavItems} from "@/app/_constants/navigation";
 import OrganizationProfile from "./organization-profile";
 import SidebarBlocks from "./sidebar-blocks";
 import SidebarProfile from "./sidebar-profile";
@@ -23,7 +23,7 @@ export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
       {/* Sidebar collapse button - right border */}
       {onToggle && (
         <button onClick={onToggle}
-          className="absolute right-0 top-4.5 translate-x-full hidden md:flex p-1 hover:bg-hover rounded-lg transition-colors text-secondary-text hover:text-primary-text bg-main border border-primary-text/10 mr-3"
+          className="absolute right-0 top-4.5 translate-x-full p-1 mr-3 btn btn-border"
           title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           <ChevronLeftIcon className={`w-3.5 h-3.5 transition-transform ${isCollapsed ? "rotate-180" : ""}`} />

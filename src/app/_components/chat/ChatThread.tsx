@@ -21,7 +21,7 @@ export function ChatThread({ entries, activeActionId, onCancelForm, onSuccessFor
   }, [entries, activeActionId]);
 
   return (
-    <div className=" mt-5 flex-1 space-y-3 overflow-y-auto px-4 py-4">
+    <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
       {entries.length === 0 && !activeActionId ? (
         <div className="rounded-xl border-border bg-card p-6 text-sm text-secondary-text">
           Try typing <span className="font-semibold text-primary-text">add product</span> or

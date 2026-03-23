@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
-import { useOrganization } from "@/contexts/OrganizationContext";
+import { useOrganization } from "@/app/_components/providers/organization-provider";
 import { useServiceLayer } from "@/hooks/useServiceLayer";
 
 type DeleteProductFormProps = {

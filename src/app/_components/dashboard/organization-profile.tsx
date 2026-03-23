@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { BuildingOfficeIcon, CheckIcon, ChevronDownIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import { useOrganization } from "../../../contexts/OrganizationContext";
+import { useOrganization } from "../providers/organization-provider";
 import { normalizeOrganizationBlockState } from "@/blocks/runtime";
 import { useExtracted } from "next-intl";
 import Popover from "../layout/popover";

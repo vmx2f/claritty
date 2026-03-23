@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useOrganization } from "@/contexts/OrganizationContext";
+import { useOrganization } from "@/app/_components/providers/organization-provider";
 import { useServiceLayer } from "@/hooks/useServiceLayer";
 
 type AddProductFormProps = {
